@@ -174,7 +174,7 @@ void loop()
 
   /* Get new sensor events with the readings */
     if (gyro_started)
-        mpu.getEvent(&a, &g, &temp);
+        mpu.getEvent(&mpu_accel, &mpu_gyro, &mpu_temp);
 
   //* Impact detection runs here, not inside an LED mode. It used to be sampled from
   //* flame_steps() at the LED frame rate and only while that mode was selected,

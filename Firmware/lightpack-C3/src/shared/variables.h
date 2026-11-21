@@ -78,7 +78,7 @@ bool display_started = false;
 
 //* Gyroscope
 bool gyro_started = false;
-sensors_event_t a, g, temp;
+sensors_event_t mpu_accel, mpu_gyro, mpu_temp; // MPU6050 events, refreshed by loop()
 
 float max_gyro_x = 0;
 float max_gyro_y = 0;
