@@ -72,7 +72,7 @@ def find_port(explicit: str | None) -> str:
     try:
         from serial.tools import list_ports
     except ImportError:
-        raise SystemExit("pyserial is not installed; pass --port COM9")
+        raise SystemExit("pyserial is not installed; pass --port COM9") from None
     for port in list_ports.comports():
         if port.vid == 0x303A and port.pid == 0x1001:
             return port.device

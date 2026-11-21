@@ -13,3 +13,7 @@ select = ["E", "W", "F", "I", "B", "UP"]
 
 [format]
 quote-style = "double"
+
+[lint.per-file-ignores]
+# PlatformIO extra_script: SCons injects Import() and env at run time.
+"tools/build_plain_ar.py" = ["F821"]
