@@ -804,9 +804,9 @@ void wifi_credential_clear(uint8_t slot)
 uint8_t wifi_credential_next(uint8_t from)
 {
     from = wifi_credential_clamp(from);
-    for (uint8_t step = 1; step <= WIFI_CREDENTIAL_SLOTS; step++)
+    for (uint8_t offset = 1; offset <= WIFI_CREDENTIAL_SLOTS; offset++)
     {
-        const uint8_t candidate = (uint8_t)((from + step) % WIFI_CREDENTIAL_SLOTS);
+        const uint8_t candidate = (uint8_t)((from + offset) % WIFI_CREDENTIAL_SLOTS);
         if (wifi_credential_present(candidate))
             return candidate;
     }
