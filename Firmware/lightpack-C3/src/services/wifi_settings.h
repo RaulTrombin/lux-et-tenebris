@@ -502,7 +502,7 @@ void wifi_report_status()
     wifi_ap_record_t ap;
     if (esp_wifi_sta_get_ap_info(&ap) == ESP_OK)
         Serial.printf("[WIFI] ap: ssid='%s' bssid=%02X:%02X:%02X:%02X:%02X:%02X auth=%u rssi=%d ch=%u\n",
-                      (const char *)ap.ssid,
+                      reinterpret_cast<const char *>(ap.ssid),
                       ap.bssid[0], ap.bssid[1], ap.bssid[2],
                       ap.bssid[3], ap.bssid[4], ap.bssid[5],
                       (unsigned)ap.authmode, (int)ap.rssi, (unsigned)ap.primary);
@@ -630,7 +630,7 @@ void wifi_event_log(arduino_event_id_t event, arduino_event_info_t info)
     {
     case ARDUINO_EVENT_WIFI_STA_CONNECTED:
         Serial.printf("[WIFI-EVT] associated: ssid='%.*s' bssid=%02X:%02X:%02X:%02X:%02X:%02X ch=%u auth=%u\n",
-                      (int)info.wifi_sta_connected.ssid_len, (const char *)info.wifi_sta_connected.ssid,
+                      (int)info.wifi_sta_connected.ssid_len, reinterpret_cast<const char *>(info.wifi_sta_connected.ssid),
                       info.wifi_sta_connected.bssid[0], info.wifi_sta_connected.bssid[1],
                       info.wifi_sta_connected.bssid[2], info.wifi_sta_connected.bssid[3],
                       info.wifi_sta_connected.bssid[4], info.wifi_sta_connected.bssid[5],
@@ -643,7 +643,7 @@ void wifi_event_log(arduino_event_id_t event, arduino_event_info_t info)
                       wifi_reason_name(info.wifi_sta_disconnected.reason),
                       (int)info.wifi_sta_disconnected.rssi,
                       (int)info.wifi_sta_disconnected.ssid_len,
-                      (const char *)info.wifi_sta_disconnected.ssid);
+                      reinterpret_cast<const char *>(info.wifi_sta_disconnected.ssid));
         break;
     case ARDUINO_EVENT_WIFI_STA_GOT_IP:
         Serial.printf("[WIFI-EVT] got address %s\n",
@@ -887,7 +887,7 @@ void wifi_credentials_migrate()
     if (esp_wifi_get_config(WIFI_IF_STA, &conf) != ESP_OK || conf.sta.ssid[0] == '\0')
         return;
 
-    wifi_credential_store(0, (const char *)conf.sta.ssid, (const char *)conf.sta.password);
+    wifi_credential_store(0, reinterpret_cast<const char *>(conf.sta.ssid), reinterpret_cast<const char *>(conf.sta.password));
     Serial.println("[WIFI] Adopted the driver's saved network into slot 0");
 }
 

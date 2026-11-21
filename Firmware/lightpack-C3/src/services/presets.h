@@ -375,7 +375,7 @@ bool preset_apply(uint8_t slot)
 //* Append one slot's values as a /api/config-shaped JSON object.
 void preset_json_config(String &json, const struct_preset &p)
 {
-    const uint8_t *base = (const uint8_t *)&p;
+    const uint8_t *base = reinterpret_cast<const uint8_t *>(&p);
     json += '{';
     for (uint8_t i = 0; i < PRESET_FIELD_COUNT; i++)
     {
@@ -386,11 +386,11 @@ void preset_json_config(String &json, const struct_preset &p)
         json += f.name;
         json += F("\":");
         if (f.type == PRESET_U8)
-            json += String(*(const uint8_t *)(base + f.offset));
+            json += String(*(base + f.offset));
         else if (f.type == PRESET_U16)
-            json += String(*(const uint16_t *)(base + f.offset));
+            json += String(*reinterpret_cast<const uint16_t *>(base + f.offset));
         else
-            json += String(*(const float *)(base + f.offset), 3);
+            json += String(*reinterpret_cast<const float *>(base + f.offset), 3);
     }
     json += '}';
 }
