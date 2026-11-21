@@ -97,7 +97,7 @@ uint32_t loopCounter = 0;
 uint16_t usb_loop_rate = 0;
 
 int position = 0;
-int power = 5;
+int fade_power = 5;
 int lenght = 0;
 
 int mode = 1;

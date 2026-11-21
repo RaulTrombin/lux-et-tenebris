@@ -717,7 +717,7 @@ void fade_strip()
         if (lenght > strip_leds())
             lenght = strip_leds();
 
-        power = (int)(fade.power_gain * max_gyro_x + fade.power_gain * max_gyro_y + fade.power_base);
+        fade_power = (int)(fade.power_gain * max_gyro_x + fade.power_gain * max_gyro_y + fade.power_base);
 
         //! led_strip.* here is per-frame scratch owned by this mode. It is NOT
         //! the user's palette; keep the palette in `palette` (variables.h).
@@ -731,7 +731,7 @@ void fade_strip()
     else
     {
         lenght = fade.idle_length; // Dim when stationary
-        power = fade.idle_power;
+        fade_power = fade.idle_power;
     }
 
     for (int i = 0; i < lenght; i++)
@@ -746,7 +746,7 @@ void fade_strip()
     return;
     //* Sine wave brightness
     /*
-    strip.setPixelColor(position, strip.Color(power, 0, 0)); // Red
+    strip.setPixelColor(position, strip.Color(fade_power, 0, 0)); // Red
     strip.show();
     position++;
     position %= NUM_LEDS;
