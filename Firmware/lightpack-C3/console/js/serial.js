@@ -162,8 +162,10 @@ export class SerialLink {
 function describeOpenError(error) {
   const message = String(error?.message || error || 'unknown error');
   if (/access denied|permission|busy|failed to open/i.test(message)) {
-    return 'The port is busy or access was denied. Close PlatformIO\'s monitor, ' +
-      'the Arduino IDE or any other terminal that owns it, then try again.';
+    return (
+      "The port is busy or access was denied. Close PlatformIO's monitor, " +
+      'the Arduino IDE or any other terminal that owns it, then try again.'
+    );
   }
   if (/no device|not found|disconnected/i.test(message)) {
     return 'The board is not on that port any more. Plug it in and choose the port again.';

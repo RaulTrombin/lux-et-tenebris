@@ -41,6 +41,7 @@ export class LineDecoder {
 
     const lines = [];
     let index;
+    // biome-ignore lint/suspicious/noAssignInExpressions: the usual find-next loop; a rewrite would duplicate the indexOf
     while ((index = this.buffer.indexOf('\n')) >= 0) {
       let line = this.buffer.slice(0, index);
       this.buffer = this.buffer.slice(index + 1);
@@ -80,7 +81,7 @@ export function parseLine(line) {
 
 export function buildCommand(verb, ...args) {
   const tail = args.filter((a) => a !== undefined && a !== null && a !== '');
-  return `@${verb}${tail.length ? ' ' + tail.join(' ') : ''}\n`;
+  return `@${verb}${tail.length ? ` ${tail.join(' ')}` : ''}\n`;
 }
 
 export const commands = {
@@ -108,7 +109,9 @@ export const commands = {
   updateEnd: () => buildCommand('UPDATE', 'END'),
   updateAbort: () => buildCommand('UPDATE', 'ABORT'),
   presetSave: (slot, name) => {
-    const clean = String(name ?? '').replace(/[\r\n]/g, ' ').trim();
+    const clean = String(name ?? '')
+      .replace(/[\r\n]/g, ' ')
+      .trim();
     return buildCommand('PRESET', 'SAVE', slot, clean ? `name=${clean}` : '');
   },
 };
@@ -138,6 +141,7 @@ export function configFromState(state) {
   const config = {};
   for (const key of FIELD_KEYS) {
     if (FIELD_SPECS[key] && FIELD_SPECS[key].preset === false) continue;
+    // biome-ignore lint/suspicious/noPrototypeBuiltins: Object.hasOwn needs Chrome 93; the console supports Chrome/Edge 89+
     if (state && Object.prototype.hasOwnProperty.call(state, key)) config[key] = state[key];
   }
   return config;
@@ -148,6 +152,7 @@ export function sanitizeConfig(config) {
   const clean = {};
   if (!config || typeof config !== 'object') return clean;
   for (const key of FIELD_KEYS) {
+    // biome-ignore lint/suspicious/noPrototypeBuiltins: Object.hasOwn needs Chrome 93; the console supports Chrome/Edge 89+
     if (!Object.prototype.hasOwnProperty.call(config, key)) continue;
     const raw = config[key];
     // null, undefined and an empty string all coerce to 0 through Number(),

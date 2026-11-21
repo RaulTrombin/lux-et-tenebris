@@ -10,8 +10,8 @@
 void setup_OTA()
 {
   // Initialize OTA
-  ArduinoOTA.onStart([]()
-                     {
+    ArduinoOTA.onStart([]()
+                       {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH)
       type = "sketch";
@@ -21,8 +21,8 @@ void setup_OTA()
     // NOTE: if updating FS this would be the place to unmount FS using FS.end()
     Serial.println("Start updating " + type); });
 
-  ArduinoOTA.onEnd([]()
-                   {
+    ArduinoOTA.onEnd([]()
+                     {
     Serial.println("\nEnd");
     Serial.flush();
     //! The restart that used to live here is gone, and removing it is a fix, not
@@ -41,11 +41,11 @@ void setup_OTA()
     //* extra delay below widens that window to about 600 ms for the same reason.
     delay(500); });
 
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
-                        { Serial.printf("Progress: %u%%\r", (progress / (total / 100))); });
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
+                          { Serial.printf("Progress: %u%%\r", (progress / (total / 100))); });
 
-  ArduinoOTA.onError([](ota_error_t error)
-                     {
+    ArduinoOTA.onError([](ota_error_t error)
+                       {
     Serial.printf("Error[%u]: ", error);
     if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
     else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
@@ -63,9 +63,9 @@ void setup_OTA()
   //* The explicit hostname still matters for the same reason it always did:
   //! begin() falls back to "esp32-<mac>" when no hostname was set, and that is
   //* the name the board would then answer to at NETWORK_HOSTNAME.local.
-  ArduinoOTA.setHostname(NETWORK_HOSTNAME);
+    ArduinoOTA.setHostname(NETWORK_HOSTNAME);
 
-  ArduinoOTA.begin();
+    ArduinoOTA.begin();
 }
 
 #endif // UPDATE_FIRMWARE_OTA_WIFI

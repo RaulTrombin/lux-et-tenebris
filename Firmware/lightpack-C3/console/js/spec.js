@@ -10,6 +10,7 @@
 //! node test asserts the list has 28 unique names, and the protocol builder
 //! refuses anything not in it.
 
+// biome-ignore format: hand-packed table, related keys share a line
 export const FIELD_SPECS = {
   // The active script. It lives in the field table because it is a /api/config
   // argument and a preset field, but it has no page of its own: the mode bar is
@@ -223,9 +224,17 @@ export const FIELD_SPECS = {
 export const FIELD_KEYS = Object.keys(FIELD_SPECS);
 
 export const PAGES = [
-  { id: 'shared', label: 'Shared', hint: 'Palette, brightness, power budget and the number of LEDs every mode draws on.' },
+  {
+    id: 'shared',
+    label: 'Shared',
+    hint: 'Palette, brightness, power budget and the number of LEDs every mode draws on.',
+  },
   { id: 'flame', label: 'Step flame', hint: 'How an impact is drawn, and how long it takes to fade.' },
-  { id: 'impact', label: 'Impact detector', hint: 'What counts as an impact. This is shared by every mode that reacts to movement.' },
+  {
+    id: 'impact',
+    label: 'Impact detector',
+    hint: 'What counts as an impact. This is shared by every mode that reacts to movement.',
+  },
   { id: 'whip', label: 'Pulse whip', hint: 'A hump of light travelling from the start of the strip.' },
   { id: 'rainbow', label: 'Rainbow flow', hint: 'Random colours drifting toward the far end.' },
   { id: 'fade', label: 'Gyro fade', hint: 'How the gyro peaks decay into the lit length and colour.' },
@@ -262,7 +271,7 @@ export function boundsFor(key, state) {
   const spec = FIELD_SPECS[key];
   if (!spec) throw new Error(`unknown field ${key}`);
 
-  let min = resolve(spec.min, state, 0);
+  const min = resolve(spec.min, state, 0);
   let max = resolve(spec.max, state, 255);
   if (max < min) max = min;
 

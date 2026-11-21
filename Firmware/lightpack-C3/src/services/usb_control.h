@@ -83,7 +83,7 @@ void usb_write_raw(const char *data, size_t length)
 {
     if (length == 0 || !usb_connected())
         return;
-    Serial.write((const uint8_t *)data, length);
+    Serial.write(reinterpret_cast<const uint8_t *>(data), length);
 }
 
 //? One write per line. Do not split a frame across calls: the CDC tx mutex is
@@ -249,27 +249,29 @@ bool usb_budget_changed = false;
 bool usb_field_differs(const struct_preset &before, const struct_preset &after,
                        const struct_presetField &field)
 {
-    const uint8_t *a = (const uint8_t *)&before + field.offset;
-    const uint8_t *b = (const uint8_t *)&after + field.offset;
+    const uint8_t *a = reinterpret_cast<const uint8_t *>(&before) + field.offset;
+    const uint8_t *b = reinterpret_cast<const uint8_t *>(&after) + field.offset;
 
     if (field.type == PRESET_U8)
-        return *(const uint8_t *)a != *(const uint8_t *)b;
+        return *a != *b;
     if (field.type == PRESET_U16)
-        return *(const uint16_t *)a != *(const uint16_t *)b;
-    return *(const float *)a != *(const float *)b;
+        return *reinterpret_cast<const uint16_t *>(a) != *reinterpret_cast<const uint16_t *>(b);
+    // cppcheck-suppress invalidPointerCast ; offset is offsetof() of a real float member, so this reads an aligned float object
+    return *reinterpret_cast<const float *>(a) != *reinterpret_cast<const float *>(b);
 }
 
 void usb_append_field_value(String &json, const struct_preset &preset,
                             const struct_presetField &field)
 {
-    const uint8_t *base = (const uint8_t *)&preset + field.offset;
+    const uint8_t *base = reinterpret_cast<const uint8_t *>(&preset) + field.offset;
 
     if (field.type == PRESET_U8)
-        json += String(*(const uint8_t *)base);
+        json += String(*base);
     else if (field.type == PRESET_U16)
-        json += String(*(const uint16_t *)base);
+        json += String(*reinterpret_cast<const uint16_t *>(base));
     else
-        json += String(*(const float *)base, 3);
+        // cppcheck-suppress invalidPointerCast ; offset is offsetof() of a real float member, so this reads an aligned float object
+        json += String(*reinterpret_cast<const float *>(base), 3);
 }
 
 void usb_send_set_ack(int seq, uint8_t count, const struct_preset &before,
@@ -304,7 +306,6 @@ void usb_send_set_ack(int seq, uint8_t count, const struct_preset &before,
     {
         if (!first)
             json += ',';
-        first = false;
         json += F("\"budget\":");
         json += String(power_budget_ma);
     }
@@ -717,7 +718,7 @@ void usb_handle_sense(char *args)
     usb_write_line(json);
 }
 
-void usb_handle_safe(char *args)
+void usb_handle_safe(const char *args)
 {
     if (!usb_ieq(args, "off"))
     {
@@ -1034,7 +1035,7 @@ void usb_handle_update(char *args)
 
         size_t decoded = 0;
         const int rc = mbedtls_base64_decode(usb_update_buf, sizeof(usb_update_buf),
-                                             &decoded, (const unsigned char *)b64,
+                                             &decoded, reinterpret_cast<const unsigned char *>(b64),
                                              strlen(b64));
         if (rc != 0 || decoded == 0)
         {
@@ -1448,8 +1449,8 @@ void usb_emit_tick()
              (unsigned)USB_CONTROL_PROTO_VERSION,
              (unsigned long)now,
              mode,
-             a.acceleration.x, a.acceleration.y, a.acceleration.z,
-             g.gyro.x, g.gyro.y, g.gyro.z,
+             mpu_accel.acceleration.x, mpu_accel.acceleration.y, mpu_accel.acceleration.z,
+             mpu_gyro.gyro.x, mpu_gyro.gyro.y, mpu_gyro.gyro.z,
              (unsigned)impact_last_magnitude,
              (unsigned long)impact_count,
              (unsigned long)impact_age,

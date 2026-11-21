@@ -169,9 +169,9 @@ void impact_poll()
     //* 1. Orientation-free magnitude, in g. Rotating the device moves gravity
     //* between the axes without changing this, which is why the detector does not
     //* need to know how the device is worn.
-    const float ax = a.acceleration.x;
-    const float ay = a.acceleration.y;
-    const float az = a.acceleration.z;
+    const float ax = mpu_accel.acceleration.x;
+    const float ay = mpu_accel.acceleration.y;
+    const float az = mpu_accel.acceleration.z;
     const float magnitude = sqrtf(ax * ax + ay * ay + az * az) / IMPACT_G;
 
     //* 2. Jerk: how fast the magnitude itself is moving, in g/s. This is the term

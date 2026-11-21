@@ -354,17 +354,17 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
     if (ceiling_b < 1)
         ceiling_b = 1;
 
-    struct_stressStep step;
-    memset(&step, 0, sizeof(step));
-    step.version = STRESS_FORMAT_VERSION;
-    step.color = color;
-    step.leds = leds;
-    step.ceiling_ma = ceiling_ma;
-    step.step_ms = step_ms;
-    step.rail_floor_mv = rail_floor_mv;
+    struct_stressStep record;
+    memset(&record, 0, sizeof(record));
+    record.version = STRESS_FORMAT_VERSION;
+    record.color = color;
+    record.leds = leds;
+    record.ceiling_ma = ceiling_ma;
+    record.step_ms = step_ms;
+    record.rail_floor_mv = rail_floor_mv;
 
     stress_run_flag = true;
-    stress_persist_step(step);
+    stress_persist_step(record);
 
     Serial.printf("[STRESS] start: %u LEDs, colour %u, ceiling %u mA, step %u ms, rail floor %u mV, ceiling brightness %lu\n",
                   (unsigned)leds, (unsigned)color, (unsigned)ceiling_ma,
@@ -377,7 +377,7 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
     {
         if (stress_abort_requested())
         {
-            stress_finish(STRESS_RESULT_ABORTED, step, 0);
+            stress_finish(STRESS_RESULT_ABORTED, record, 0);
             return;
         }
         delay(100);
@@ -385,10 +385,10 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
 
     //* 2. The open-circuit point and the known-load probe.
     delay(1000);
-    step.phase = STRESS_PHASE_PROBE;
-    step.v_off = (uint16_t)supply_rail_mv();
-    step.v_start = step.v_off;
-    step.v_min = step.v_off;
+    record.phase = STRESS_PHASE_PROBE;
+    record.v_off = (uint16_t)supply_rail_mv();
+    record.v_start = record.v_off;
+    record.v_min = record.v_off;
     //* Scale the probe so it never exceeds the selected ceiling: a 500 mA run
     //? must not probe at 1.2 A. The 2 A and 4 A runs stay at 255 and keep the
     //* familiar 20-LED / 1.2 A point.
@@ -396,26 +396,26 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
     const uint8_t probe_b = (probe_b_full > 255UL) ? 255 : (uint8_t)probe_b_full;
     const uint16_t probe_est = (uint16_t)(((uint32_t)probe_leds * per_led_ma * probe_b) / 255UL);
 
-    step.brightness = probe_b;
-    step.est_ma = probe_est;
+    record.brightness = probe_b;
+    record.est_ma = probe_est;
 
-    stress_persist_step(step);
+    stress_persist_step(record);
 
-    Serial.printf("[STRESS] V_off %u mV with the strip blank\n", (unsigned)step.v_off);
+    Serial.printf("[STRESS] V_off %u mV with the strip blank\n", (unsigned)record.v_off);
 
     stress_fill(color, probe_b, probe_leds);
     delay(step_ms);
-    step.v_on = (uint16_t)supply_rail_mv();
-    if (step.v_on < step.v_min)
-        step.v_min = step.v_on;
+    record.v_on = (uint16_t)supply_rail_mv();
+    if (record.v_on < record.v_min)
+        record.v_min = record.v_on;
 
-    const uint32_t delta_mv = (step.v_off > step.v_on) ? (uint32_t)(step.v_off - step.v_on) : 0;
-    step.r_mohm = (probe_est > 0) ? (uint16_t)((delta_mv * 1000UL) / probe_est) : 0;
+    const uint32_t delta_mv = (record.v_off > record.v_on) ? (uint32_t)(record.v_off - record.v_on) : 0;
+    record.r_mohm = (probe_est > 0) ? (uint16_t)((delta_mv * 1000UL) / probe_est) : 0;
 
     Serial.printf("[STRESS] probe %u LEDs at %u/255 (%u mA): V_on %u mV, R %u mOhm\n",
                   (unsigned)probe_leds, (unsigned)probe_b, (unsigned)probe_est,
-                  (unsigned)step.v_on, (unsigned)step.r_mohm);
-    stress_persist_step(step);
+                  (unsigned)record.v_on, (unsigned)record.r_mohm);
+    stress_persist_step(record);
 
     stress_blank();
     delay(500);
@@ -432,14 +432,14 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
             brightness = (uint16_t)ceiling_b;
 
         const uint32_t est_ma = ((uint32_t)leds * per_led_ma * brightness) / 255UL;
-        step.phase = STRESS_PHASE_RAMP;
-        step.brightness = (uint8_t)brightness;
-        step.est_ma = (uint16_t)((est_ma > 65535UL) ? 65535UL : est_ma);
-        step.elapsed_ms = millis() - start;
+        record.phase = STRESS_PHASE_RAMP;
+        record.brightness = (uint8_t)brightness;
+        record.est_ma = (uint16_t)((est_ma > 65535UL) ? 65535UL : est_ma);
+        record.elapsed_ms = millis() - start;
 
         //! Persist BEFORE applying: a brown-out during this step must leave this
         //? step on record, and the rail is still healthy when this write lands.
-        stress_persist_step(step);
+        stress_persist_step(record);
         stress_fill(color, (uint8_t)brightness, leds);
 
         Serial.printf("[STRESS] b=%u est=%lu mA", (unsigned)brightness, (unsigned long)est_ma);
@@ -458,8 +458,8 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
             }
 
             const uint16_t rail_mv = (uint16_t)supply_rail_mv();
-            if (rail_mv < step.v_min)
-                step.v_min = rail_mv;
+            if (rail_mv < record.v_min)
+                record.v_min = rail_mv;
 
             if (rail_floor_mv > 0 && rail_mv < rail_floor_mv)
             {
@@ -476,7 +476,7 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
             }
         }
 
-        Serial.printf(" Vmin=%u mV\n", (unsigned)step.v_min);
+        Serial.printf(" Vmin=%u mV\n", (unsigned)record.v_min);
 
         if (aborted)
         {
@@ -504,8 +504,8 @@ void stress_test_run(uint8_t color, uint16_t ceiling_ma, uint16_t step_ms, uint1
         brightness += STRESS_STEP;
     }
 
-    step.elapsed_ms = millis() - start;
-    stress_finish(result, step, step.elapsed_ms);
+    record.elapsed_ms = millis() - start;
+    stress_finish(result, record, record.elapsed_ms);
 }
 
 //* ---------------------- ENTRY POINTS ----------------------

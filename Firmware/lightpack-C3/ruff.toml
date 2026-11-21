@@ -1,0 +1,19 @@
+# Ruff config for the computer-side scripts in tools/. Run through
+# scripts/lint.sh / scripts/format.sh (uvx or pipx run), never installed globally.
+required-version = ">=0.17"
+target-version = "py39"
+# Measured: format diff lines at 79 -> 79, 88 -> 36, 100 -> 18, 110/120 -> 26.
+line-length = 100
+include = ["tools/*.py"]
+extend-exclude = ["tools/button_probe", ".pio"]
+
+[lint]
+# pycodestyle errors/warnings, pyflakes, import order, bugbear, pyupgrade.
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[format]
+quote-style = "double"
+
+[lint.per-file-ignores]
+# PlatformIO extra_script: SCons injects Import() and env at run time.
+"tools/build_plain_ar.py" = ["F821"]

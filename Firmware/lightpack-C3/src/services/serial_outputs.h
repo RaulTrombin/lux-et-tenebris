@@ -144,9 +144,9 @@ void serial_outputs()
         Serial.printf("\n\n");
         Serial.printf("->| HARDWARE | IP: %s | MAC: %s | RSSI: %d | \n", tempIP, tempMac.c_str(), wifi_rssi);
         Serial.printf("->| GYRO     | Accel_X: %.2f | Accel_Y: %.2f | Accel_Z: %.2f |\n",
-                      a.acceleration.x, a.acceleration.y, a.acceleration.z);
+                      mpu_accel.acceleration.x, mpu_accel.acceleration.y, mpu_accel.acceleration.z);
         Serial.printf("->| GYRO     | Gyro_X: %.2f  | Gyro_Y: %.2f  | Gyro_Z: %.2f |\n",
-                      g.gyro.x, g.gyro.y, g.gyro.z);
+                      mpu_gyro.gyro.x, mpu_gyro.gyro.y, mpu_gyro.gyro.z);
 
         //* Detector health. The rate the loop actually achieved is not something the
         //* firmware can assume: with WiFi, a web request or an OTA transfer in
@@ -166,12 +166,12 @@ void serial_outputs()
 
     //* Teleplot outputs
     /*
-    Serial.printf(">acc_x: %.2f \n", a.acceleration.x);
-    Serial.printf(">acc_y: %.2f \n", a.acceleration.y);
-    Serial.printf(">acc_z: %.2f \n", a.acceleration.z);
-    Serial.printf(">gyro_x: %.2f \n", g.gyro.x);
-    Serial.printf(">gyro_y: %.2f \n", g.gyro.y);
-    Serial.printf(">gyro_z: %.2f \n", g.gyro.z);
+    Serial.printf(">acc_x: %.2f \n", mpu_accel.acceleration.x);
+    Serial.printf(">acc_y: %.2f \n", mpu_accel.acceleration.y);
+    Serial.printf(">acc_z: %.2f \n", mpu_accel.acceleration.z);
+    Serial.printf(">gyro_x: %.2f \n", mpu_gyro.gyro.x);
+    Serial.printf(">gyro_y: %.2f \n", mpu_gyro.gyro.y);
+    Serial.printf(">gyro_z: %.2f \n", mpu_gyro.gyro.z);
     */
 }
 

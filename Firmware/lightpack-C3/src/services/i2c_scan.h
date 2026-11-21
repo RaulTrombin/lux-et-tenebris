@@ -52,10 +52,12 @@
 void mpu_apply_accel_range()
 {
     mpu.setAccelerometerRange(MPU_ACCEL_RANGE);
+    // clang-format off: hand-aligned ternary table, ColumnLimit 0 folds it into one ragged line
     Serial.printf("[IMU] accelerometer range set to +/-%d g\n",
                   MPU_ACCEL_RANGE == MPU6050_RANGE_16_G ? 16 :
                   MPU_ACCEL_RANGE == MPU6050_RANGE_8_G  ? 8 :
                   MPU_ACCEL_RANGE == MPU6050_RANGE_4_G  ? 4 : 2);
+    // clang-format on
 }
 
 //? Read a single register over the bus. Returns false when the device did not answer, so a

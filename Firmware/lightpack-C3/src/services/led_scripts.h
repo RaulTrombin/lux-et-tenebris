@@ -465,20 +465,20 @@ void update_onboard_LED()
 #else
     //* The old gyro display, kept behind the flag above. Note that these values
     //! truncate to 0 for any realistic reading - see the note over the flag.
-    status_led.red = abs(g.gyro.x);
-    status_led.green = abs(g.gyro.y);
-    status_led.blue = abs(g.gyro.z);
+    status_led.red = abs(mpu_gyro.gyro.x);
+    status_led.green = abs(mpu_gyro.gyro.y);
+    status_led.blue = abs(mpu_gyro.gyro.z);
 #endif
 
     onboard_led.setPixelColor(0, strip.Color(status_led.red, status_led.green, status_led.blue));
     onboard_led.show();
     /*
-    Serial.printf(">Gyro_X: %.2f \n", g.gyro.x);
-    Serial.printf(">Gyro_Y: %.2f \n", g.gyro.y);
-    Serial.printf(">Gyro_Z: %.2f \n", g.gyro.z);
-    Serial.printf(">Accel_X: %.2f \n", a.acceleration.x);
-    Serial.printf(">Accel_Y: %.2f \n", a.acceleration.y);
-    Serial.printf(">Accel_Z: %.2f \n", a.acceleration.z);
+    Serial.printf(">Gyro_X: %.2f \n", mpu_gyro.gyro.x);
+    Serial.printf(">Gyro_Y: %.2f \n", mpu_gyro.gyro.y);
+    Serial.printf(">Gyro_Z: %.2f \n", mpu_gyro.gyro.z);
+    Serial.printf(">Accel_X: %.2f \n", mpu_accel.acceleration.x);
+    Serial.printf(">Accel_Y: %.2f \n", mpu_accel.acceleration.y);
+    Serial.printf(">Accel_Z: %.2f \n", mpu_accel.acceleration.z);
     */
 }
 
@@ -701,9 +701,9 @@ void fade_strip()
     max_gyro_y *= fade.decay;
     max_gyro_z *= fade.decay;
     // Update hold values
-    max_gyro_x = max(max_gyro_x, abs(g.gyro.x));
-    max_gyro_y = max(max_gyro_y, abs(g.gyro.y));
-    max_gyro_z = max(max_gyro_z, abs(g.gyro.z));
+    max_gyro_x = max(max_gyro_x, abs(mpu_gyro.gyro.x));
+    max_gyro_y = max(max_gyro_y, abs(mpu_gyro.gyro.y));
+    max_gyro_z = max(max_gyro_z, abs(mpu_gyro.gyro.z));
 
     if (max_gyro_z > fade.trigger)
     {
@@ -717,7 +717,7 @@ void fade_strip()
         if (lenght > strip_leds())
             lenght = strip_leds();
 
-        power = (int)(fade.power_gain * max_gyro_x + fade.power_gain * max_gyro_y + fade.power_base);
+        fade_power = (int)(fade.power_gain * max_gyro_x + fade.power_gain * max_gyro_y + fade.power_base);
 
         //! led_strip.* here is per-frame scratch owned by this mode. It is NOT
         //! the user's palette; keep the palette in `palette` (variables.h).
@@ -731,7 +731,7 @@ void fade_strip()
     else
     {
         lenght = fade.idle_length; // Dim when stationary
-        power = fade.idle_power;
+        fade_power = fade.idle_power;
     }
 
     for (int i = 0; i < lenght; i++)
@@ -746,7 +746,7 @@ void fade_strip()
     return;
     //* Sine wave brightness
     /*
-    strip.setPixelColor(position, strip.Color(power, 0, 0)); // Red
+    strip.setPixelColor(position, strip.Color(fade_power, 0, 0)); // Red
     strip.show();
     position++;
     position %= NUM_LEDS;

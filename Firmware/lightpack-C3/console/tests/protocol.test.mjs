@@ -29,6 +29,7 @@ import { FIELD_KEYS, FIELD_SPECS, boundsFor } from '../js/spec.js';
 // The 39 preset names in src/services/presets.h's PRESET_FIELDS, written out here
 // on purpose: if the firmware table and the browser spec drift apart, this fails.
 // `budget` is a /api/config field but deliberately not a preset field.
+// biome-ignore format: grouped like PRESET_FIELDS in presets.h so drift is easy to spot
 const FIRMWARE_FIELDS = [
   'mode',
   'red', 'green', 'blue', 'brightness',
@@ -61,10 +62,7 @@ test('formatNumber keeps values in the form usb_is_number() accepts', () => {
 });
 
 test('buildSet builds one ordered batch and rejects unknown fields', () => {
-  assert.equal(
-    buildSet({ brightness: 128, mode: 5 }, 7),
-    '@SET brightness=128&mode=5&seq=7\n'
-  );
+  assert.equal(buildSet({ brightness: 128, mode: 5 }, 7), '@SET brightness=128&mode=5&seq=7\n');
   assert.equal(buildSet({ flame_decay: 0.9 }), '@SET flame_decay=0.9\n');
   assert.throws(() => buildSet({ widht: 1 }), /unknown config field/);
   assert.throws(() => buildSet({ brightness: Number.NaN }), /bad value/);
@@ -72,6 +70,7 @@ test('buildSet builds one ordered batch and rejects unknown fields', () => {
 });
 
 test('one full 40-field batch fits the firmware line limit', () => {
+  // biome-ignore format: hand-packed 40-field batch, related keys share a line
   const values = {
     mode: 2, red: 255, green: 128, blue: 64, brightness: 200, budget: 2000,
     whip_speed: 20, whip_length: 250, whip_period: 5000, whip_peak: 255, whip_offset: 255,
@@ -150,8 +149,14 @@ test('parseLine separates frames, logs and malformed frames', () => {
 
 test('configFromState picks the 39 preset fields and ignores derived values', () => {
   const state = {
-    mode: 5, red: 1, green: 2, blue: 3, brightness: 4,
-    whip_travel_ms: 999, mode_key: 'whip', active_leds: 60,
+    mode: 5,
+    red: 1,
+    green: 2,
+    blue: 3,
+    brightness: 4,
+    whip_travel_ms: 999,
+    mode_key: 'whip',
+    active_leds: 60,
   };
   const config = configFromState(state);
   assert.deepEqual(Object.keys(config).sort(), ['blue', 'brightness', 'green', 'mode', 'red']);
@@ -190,7 +195,11 @@ test('bounds come from the live state, not from a second hard-coded copy', () =>
   };
 
   assert.deepEqual(boundsFor('leds', state), {
-    min: 1, max: 250, step: 1, decimals: 0, unit: '',
+    min: 1,
+    max: 250,
+    step: 1,
+    decimals: 0,
+    unit: '',
   });
   assert.equal(boundsFor('whip_length', state).max, 60);
   assert.equal(boundsFor('whip_length', state).min, 2);

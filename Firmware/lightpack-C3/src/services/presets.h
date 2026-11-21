@@ -222,6 +222,7 @@ uint8_t preset_read_checked(uint8_t slot, struct_preset &out)
     {
         //? Zeroed first so a failed read cannot leave the caller's struct holding
         //* a mixture of the stored bytes and whatever was in it before.
+        // cppcheck-suppress memsetClassFloat ; all-bits-zero is 0.0f in IEEE-754, which the C3 uses
         memset(&out, 0, sizeof(out));
         const size_t stored = preferences.getBytes(preset_key(slot), &out, sizeof(out));
 
@@ -375,7 +376,7 @@ bool preset_apply(uint8_t slot)
 //* Append one slot's values as a /api/config-shaped JSON object.
 void preset_json_config(String &json, const struct_preset &p)
 {
-    const uint8_t *base = (const uint8_t *)&p;
+    const uint8_t *base = reinterpret_cast<const uint8_t *>(&p);
     json += '{';
     for (uint8_t i = 0; i < PRESET_FIELD_COUNT; i++)
     {
@@ -386,11 +387,12 @@ void preset_json_config(String &json, const struct_preset &p)
         json += f.name;
         json += F("\":");
         if (f.type == PRESET_U8)
-            json += String(*(const uint8_t *)(base + f.offset));
+            json += String(*(base + f.offset));
         else if (f.type == PRESET_U16)
-            json += String(*(const uint16_t *)(base + f.offset));
+            json += String(*reinterpret_cast<const uint16_t *>(base + f.offset));
         else
-            json += String(*(const float *)(base + f.offset), 3);
+            // cppcheck-suppress invalidPointerCast ; offset is offsetof() of a real float member, so this reads an aligned float object
+            json += String(*reinterpret_cast<const float *>(base + f.offset), 3);
     }
     json += '}';
 }
