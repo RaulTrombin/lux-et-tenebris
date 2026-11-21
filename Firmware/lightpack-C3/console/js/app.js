@@ -143,6 +143,7 @@ function boot() {
 function loadDemo() {
   app.demo = true;
   app.connected = false;
+  // biome-ignore format: hand-packed demo state, related keys share a line
   app.pong = {
     t: 'pong', v: 1, proto: 1, fw: '0.4-pre (demo)',
     build: 'demo state', chip: 'ESP32-C3', cpu_mhz: 160,
@@ -162,6 +163,7 @@ function loadDemo() {
     { slot: 3, used: false, state: 'empty', name: '' },
     { slot: 4, used: false, state: 'incompatible', name: '' },
   ];
+  // biome-ignore format: hand-packed demo state, related keys share a line
   app.state = {
     mode: 5, mode_key: 'whip', mode_label: 'Pulse whip',
     red: 255, green: 140, blue: 0, brightness: 180,

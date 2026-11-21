@@ -1,0 +1,40 @@
+# clang-format 18 config for the lightpack-C3 firmware (src/ only - see
+# .clang-format-ignore and scripts/format.sh for what is in scope).
+#
+# Matched to the existing style of src/services/*.h, which is VS Code's
+# "Visual Studio" fallback style: 4-space indent, Allman braces, case labels
+# flush with the switch, pointer bound to the name.
+BasedOnStyle: Microsoft
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Allman
+IndentCaseLabels: false
+PointerAlignment: Right
+DerivePointerAlignment: false
+AccessModifierOffset: -4
+NamespaceIndentation: None
+FixNamespaceComments: false
+
+# ColumnLimit 0 = keep the author's line breaks. Measured against the tree
+# before the first reformat (diff lines, excluding the three 2-space files that
+# have to be re-indented anyway): 0 -> 7, 110 -> ~660, 120 -> ~660, 100 -> ~890.
+# The code has no hard limit today (max line 138), so any limit would mostly
+# re-wrap hand-wrapped calls.
+ColumnLimit: 0
+
+# REQUIRED: shared/dependencies.h include order is load-bearing (unity build).
+SortIncludes: Never
+# REQUIRED: //* //? //! Better-Comments markers are hand-wrapped; never reflow.
+ReflowComments: false
+# Trailing-comment columns are hand-aligned per block; aligning them file-wide
+# moves ~80 lines for no gain.
+AlignTrailingComments:
+  Kind: Leave
+
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: All
+AllowShortBlocksOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: All
+# usb_control.h's JSON unescape table keeps `case 'n': out += '\n'; break;`.
+AllowShortCaseLabelsOnASingleLine: true

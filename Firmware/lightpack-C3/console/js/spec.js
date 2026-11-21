@@ -10,6 +10,7 @@
 //! node test asserts the list has 28 unique names, and the protocol builder
 //! refuses anything not in it.
 
+// biome-ignore format: hand-packed table, related keys share a line
 export const FIELD_SPECS = {
   // The active script. It lives in the field table because it is a /api/config
   // argument and a preset field, but it has no page of its own: the mode bar is

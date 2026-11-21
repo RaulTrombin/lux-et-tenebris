@@ -29,6 +29,7 @@ import { FIELD_KEYS, FIELD_SPECS, boundsFor } from '../js/spec.js';
 // The 39 preset names in src/services/presets.h's PRESET_FIELDS, written out here
 // on purpose: if the firmware table and the browser spec drift apart, this fails.
 // `budget` is a /api/config field but deliberately not a preset field.
+// biome-ignore format: grouped like PRESET_FIELDS in presets.h so drift is easy to spot
 const FIRMWARE_FIELDS = [
   'mode',
   'red', 'green', 'blue', 'brightness',
@@ -72,6 +73,7 @@ test('buildSet builds one ordered batch and rejects unknown fields', () => {
 });
 
 test('one full 40-field batch fits the firmware line limit', () => {
+  // biome-ignore format: hand-packed 40-field batch, related keys share a line
   const values = {
     mode: 2, red: 255, green: 128, blue: 64, brightness: 200, budget: 2000,
     whip_speed: 20, whip_length: 250, whip_period: 5000, whip_peak: 255, whip_offset: 255,

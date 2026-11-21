@@ -1,0 +1,7 @@
+# Paths clang-format must never touch (editor format-on-save included).
+# Patterns are relative to this directory; clang-format 18 has no "**".
+# tools/button_probe is a separate PlatformIO project with its own style.
+tools/button_probe/*
+tools/button_probe/*/*
+tools/button_probe/*/*/*
+.pio/*
