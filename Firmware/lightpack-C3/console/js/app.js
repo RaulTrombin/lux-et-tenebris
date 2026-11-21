@@ -1421,12 +1421,12 @@ async function checkLatestBuild() {
 }
 
 function validateUpdateManifest(manifest) {
-  if (!manifest || manifest.name !== 'lightpack-C3') {
+  if (manifest?.name !== 'lightpack-C3') {
     throw new Error('the manifest is not for lightpack-C3');
   }
 
   const build = Array.isArray(manifest.builds) ? manifest.builds[0] : null;
-  if (!build || build.chipFamily !== 'ESP32-C3') {
+  if (build?.chipFamily !== 'ESP32-C3') {
     throw new Error('the manifest is not for an ESP32-C3');
   }
 
@@ -1762,7 +1762,7 @@ function renderUpdatePanel() {
 function savedSsid(slot) {
   const slots = Array.isArray(app.state?.wifi_slots) ? app.state.wifi_slots : [];
   const entry = slots.find((item) => Number(item.slot) === slot);
-  if (entry && entry.ssid) return String(entry.ssid);
+  if (entry?.ssid) return String(entry.ssid);
   //? A 0.6.3 board reports one name only; show it in the primary row.
   if (slot === 0 && !slots.length && app.state?.wifi_ssid) return String(app.state.wifi_ssid);
   return '';
@@ -1917,13 +1917,13 @@ function renderDiagnostics() {
   setText('diag-proto', pong ? String(pong.proto) : '1');
   setText('diag-uptime', tick ? formatUptime(tick.ms) : state ? formatUptime(state.uptime_ms) : '—');
   setText('diag-mode', state ? `${state.mode_label || 'Unknown'} (${state.mode})` : '—');
-  setText('diag-loop', tick ? `${tick.lp} Hz` : state && state.loop_rate ? `${state.loop_rate} Hz` : '—');
-  setText('diag-rail', tick ? `${tick.rail} mV` : state && state.rail_mv ? `${state.rail_mv} mV` : '—');
+  setText('diag-loop', tick ? `${tick.lp} Hz` : state?.loop_rate ? `${state.loop_rate} Hz` : '—');
+  setText('diag-rail', tick ? `${tick.rail} mV` : state?.rail_mv ? `${state.rail_mv} mV` : '—');
   setText(
     'diag-heap',
     tick
       ? `${Math.round(Number(tick.heap) / 1024)} KB`
-      : state && state.free_heap
+      : state?.free_heap
         ? `${Math.round(Number(state.free_heap) / 1024)} KB`
         : '—',
   );
@@ -1933,7 +1933,7 @@ function renderDiagnostics() {
       ? `${state.net}${state.portal ? ' (config hotspot)' : ''}${state.offline_mode ? ' (offline mode)' : ''}`
       : '—',
   );
-  setText('diag-rssi', state && state.rssi ? `${state.rssi} dBm` : '—');
+  setText('diag-rssi', state?.rssi ? `${state.rssi} dBm` : '—');
   setText('diag-ip', state ? state.ip : '—');
   setText('diag-host', state ? state.hostname : '—');
   setText('diag-ssid', state ? state.wifi_ssid || 'nothing saved' : '—');
@@ -2002,7 +2002,7 @@ function renderStress() {
     rows.push(['Ramp duration', `${seconds.toFixed(1)} s`]);
   }
 
-  if (state && state.stress_run) {
+  if (state?.stress_run) {
     rows.push(['State', 'a test is marked as running; wait for it to finish, then reconnect']);
   }
 
@@ -2011,7 +2011,7 @@ function renderStress() {
 
   setText(
     'stressState',
-    app.stressRunning ? 'test running' : state && state.safe_boot ? `safe mode ${state.safe_pct}%` : '',
+    app.stressRunning ? 'test running' : state?.safe_boot ? `safe mode ${state.safe_pct}%` : '',
   );
 
   let hint = 'Connect to the board with the radio off to run a test.';
@@ -2109,7 +2109,7 @@ function renderSense() {
   const state = app.state;
   const rows = [];
 
-  if (!state || !state.sense_count) {
+  if (!state?.sense_count) {
     rows.push(['Result', 'no sense run recorded']);
   } else {
     const vOff = Number(state.sense_v_off) || 0;
