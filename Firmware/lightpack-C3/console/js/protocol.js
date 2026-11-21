@@ -80,7 +80,7 @@ export function parseLine(line) {
 
 export function buildCommand(verb, ...args) {
   const tail = args.filter((a) => a !== undefined && a !== null && a !== '');
-  return `@${verb}${tail.length ? ' ' + tail.join(' ') : ''}\n`;
+  return `@${verb}${tail.length ? ` ${tail.join(' ')}` : ''}\n`;
 }
 
 export const commands = {

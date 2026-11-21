@@ -271,7 +271,7 @@ export function boundsFor(key, state) {
   const spec = FIELD_SPECS[key];
   if (!spec) throw new Error(`unknown field ${key}`);
 
-  let min = resolve(spec.min, state, 0);
+  const min = resolve(spec.min, state, 0);
   let max = resolve(spec.max, state, 255);
   if (max < min) max = min;
 

@@ -1190,7 +1190,7 @@ function renderDerived() {
   const noticeEl = $('#budgetNotice');
   if (noticeEl) {
     noticeEl.textContent = notice;
-    noticeEl.className = 'hint ' + (warn ? 'warn' : 'ok');
+    noticeEl.className = `hint ${warn ? 'warn' : 'ok'}`;
   }
 
   if (state.whip_travel_ms !== undefined) {
@@ -2478,7 +2478,7 @@ async function importPresets(file) {
     // The web page leaves the board on the last imported configuration and
     // saves it; do the same so the two import paths agree.
     await commit();
-    setText('presetInfo', `Imported ${done} preset(s)` + (skipped ? `, skipped ${skipped}` : '') + '.');
+    setText('presetInfo', `Imported ${done} preset(s)${skipped ? `, skipped ${skipped}` : ''}.`);
   } catch (error) {
     setText('presetInfo', `Import stopped after ${done}: ${error.message}`);
   } finally {
@@ -2534,7 +2534,7 @@ function saveLog() {
   for (const line of $('#log').children) {
     lines.push(line.textContent);
   }
-  const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/plain' });
+  const blob = new Blob([`${lines.join('\n')}\n`], { type: 'text/plain' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = `lightpack-console-${timestampForFile()}.log`;
