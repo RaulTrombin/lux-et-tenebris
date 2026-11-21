@@ -304,7 +304,6 @@ void usb_send_set_ack(int seq, uint8_t count, const struct_preset &before,
     {
         if (!first)
             json += ',';
-        first = false;
         json += F("\"budget\":");
         json += String(power_budget_ma);
     }
@@ -717,7 +716,7 @@ void usb_handle_sense(char *args)
     usb_write_line(json);
 }
 
-void usb_handle_safe(char *args)
+void usb_handle_safe(const char *args)
 {
     if (!usb_ieq(args, "off"))
     {
