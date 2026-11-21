@@ -871,6 +871,7 @@ bool webpage_config_apply_arg(const char *name, const String &value)
         const String &value;
         bool hasArg(const char *key) const { return strcmp(name, key) == 0; }
         String arg(const char *) const { return value; }
+    // cppcheck-suppress shadowVariable ; deliberate stand-in for web_server so the handler body below is reused unchanged
     } web_server{name, value};
 
     bool changed = false;

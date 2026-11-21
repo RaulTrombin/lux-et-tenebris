@@ -23,6 +23,7 @@
 //? the note over that function.
 //? The captured values live in shared/variables.h so the replay can reach them.
 
+// cppcheck-suppress unusedFunction ; Arduino entry point, called by the framework
 void setup()
 {
   //* First statement on purpose. esp_reset_reason() reports the cause of the
@@ -165,6 +166,7 @@ void setup()
     }
 }
 
+// cppcheck-suppress unusedFunction ; Arduino entry point, called by the framework
 void loop()
 {
   // power = (sin(millis() / 200.0) * 15) + 15; // Calculate brightness based on sine wave (0-30 range)

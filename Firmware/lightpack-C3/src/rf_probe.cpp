@@ -106,6 +106,7 @@ static void ap_test()
     WiFi.mode(WIFI_STA);
 }
 
+// cppcheck-suppress unusedFunction ; Arduino entry point, called by the framework
 void setup()
 {
     //! FIRST, before anything can block: this carrier is latched on, and the
@@ -192,6 +193,7 @@ void setup()
     Serial.println("\n[PROBE] idle - AP test + sweep, repeating. Swap the unit when ready.");
 }
 
+// cppcheck-suppress unusedFunction ; Arduino entry point, called by the framework
 void loop()
 {
     ap_test();          // 90 s transmitting

@@ -256,6 +256,7 @@ bool usb_field_differs(const struct_preset &before, const struct_preset &after,
         return *a != *b;
     if (field.type == PRESET_U16)
         return *reinterpret_cast<const uint16_t *>(a) != *reinterpret_cast<const uint16_t *>(b);
+    // cppcheck-suppress invalidPointerCast ; offset is offsetof() of a real float member, so this reads an aligned float object
     return *reinterpret_cast<const float *>(a) != *reinterpret_cast<const float *>(b);
 }
 
@@ -269,6 +270,7 @@ void usb_append_field_value(String &json, const struct_preset &preset,
     else if (field.type == PRESET_U16)
         json += String(*reinterpret_cast<const uint16_t *>(base));
     else
+        // cppcheck-suppress invalidPointerCast ; offset is offsetof() of a real float member, so this reads an aligned float object
         json += String(*reinterpret_cast<const float *>(base), 3);
 }
 
