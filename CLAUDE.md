@@ -37,7 +37,13 @@ From anywhere in the repo:
 scripts/lint.sh          # clang-format, biome ci, ruff check + format --check, npm test
 scripts/lint.sh --all    # ... plus pio run -e C3-USB and pio check -e C3-USB
 scripts/format.sh        # rewrite in-scope files with clang-format 18, Biome and ruff
+scripts/package_firmware.sh [--build]  # C3-USB release folder: images, factory .bin, manifest, hashes
 ```
+
+CI (`.github/workflows/lightpack-c3.yml`) runs `scripts/lint.sh --cppcheck` and builds C3-USB and
+C3-RF on pushes to main and on PRs, and uploads the images as artifacts. Pushing a
+`lightpack-C3-v<version>` tag that matches `LIGHTPACK_FW_VERSION` also publishes a GitHub Release,
+with that version's CHANGELOG section as the notes.
 
 ## Rules
 

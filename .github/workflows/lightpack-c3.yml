@@ -1,0 +1,191 @@
+# lightpack-C3: checks, firmware builds and tagged releases.
+#
+# - Every push to main and every PR touching the firmware: scripts/lint.sh --cppcheck,
+#   plus a build of each PlatformIO environment. Images are uploaded as workflow artifacts.
+# - A tag named lightpack-C3-v<version> (see Firmware/lightpack-C3/releases/README.md) also
+#   publishes a GitHub Release with the packaged images. The tag must match
+#   LIGHTPACK_FW_VERSION in src/shared/variables.h, and the release notes are that version's
+#   CHANGELOG.md section.
+#
+# Path filters are not evaluated for tag pushes, so a release tag always runs.
+name: lightpack-C3
+
+on:
+  push:
+    branches: [main]
+    tags: ["lightpack-C3-v*"]
+    paths:
+      - "Firmware/lightpack-C3/**"
+      - "scripts/**"
+      - "THIRD-PARTY-NOTICES.md"
+      - ".github/workflows/lightpack-c3.yml"
+  pull_request:
+    paths:
+      - "Firmware/lightpack-C3/**"
+      - "scripts/**"
+      - "THIRD-PARTY-NOTICES.md"
+      - ".github/workflows/lightpack-c3.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Never cancel a release run half-way.
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+permissions:
+  contents: read
+
+env:
+  # Same PlatformIO Core as the development machines; platform and framework versions are
+  # pinned in platformio.ini.
+  PLATFORMIO_VERSION: "6.2.0"
+  FW_DIR: Firmware/lightpack-C3
+
+jobs:
+  lint:
+    name: Lint (format, biome, ruff, tests, cppcheck)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format 18
+        # scripts/_common.sh requires major 18: other majors format differently.
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang-format-18
+          clang-format-18 --version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ env.FW_DIR }}/console/package-lock.json
+      - name: Install Biome (console devDependency)
+        working-directory: ${{ env.FW_DIR }}/console
+        run: npm ci
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: pio-${{ runner.os }}-${{ env.PLATFORMIO_VERSION }}-${{ hashFiles('Firmware/lightpack-C3/platformio.ini') }}
+          restore-keys: pio-${{ runner.os }}-${{ env.PLATFORMIO_VERSION }}-
+      - name: Install PlatformIO
+        run: pip install "platformio==${PLATFORMIO_VERSION}"
+
+      - name: scripts/lint.sh --cppcheck
+        run: scripts/lint.sh --cppcheck
+
+  build:
+    name: Build ${{ matrix.env }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # C3-OTA builds the same image as C3-USB and differs only in the upload method.
+        env: [C3-USB, C3-RF]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # git describe in BUILD.txt
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: pio-${{ runner.os }}-${{ env.PLATFORMIO_VERSION }}-${{ hashFiles('Firmware/lightpack-C3/platformio.ini') }}
+          restore-keys: pio-${{ runner.os }}-${{ env.PLATFORMIO_VERSION }}-
+      - name: Install PlatformIO
+        run: pip install "platformio==${PLATFORMIO_VERSION}"
+
+      - name: pio run -e ${{ matrix.env }}
+        run: pio run -d "$FW_DIR" -e "${{ matrix.env }}"
+
+      - name: Size report
+        run: |
+          {
+            echo "### ${{ matrix.env }}"
+            echo '```'
+            pio run -d "$FW_DIR" -e "${{ matrix.env }}" -t size | grep -A1 -E '^\s+text'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Package release images
+        if: matrix.env == 'C3-USB'
+        run: scripts/package_firmware.sh "$RUNNER_TEMP/dist"
+
+      - name: Collect probe image
+        if: matrix.env != 'C3-USB'
+        run: |
+          mkdir -p "$RUNNER_TEMP/dist"
+          cp "$FW_DIR/.pio/build/${{ matrix.env }}/firmware.bin" "$RUNNER_TEMP/dist/${{ matrix.env }}-firmware.bin"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lightpack-C3-${{ matrix.env }}
+          path: ${{ runner.temp }}/dist/
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/lightpack-C3-v')
+    needs: [lint, build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag against LIGHTPACK_FW_VERSION
+        id: version
+        run: |
+          tag_version="${GITHUB_REF_NAME#lightpack-C3-v}"
+          fw_version="$(sed -nE 's/^#define LIGHTPACK_FW_VERSION "([^"]+)".*/\1/p' "$FW_DIR/src/shared/variables.h")"
+          norm() { echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/^v//'; }
+          if [[ "$(norm "$tag_version")" != "$(norm "$fw_version")" ]]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match LIGHTPACK_FW_VERSION \"$fw_version\""
+            exit 1
+          fi
+          echo "version=$fw_version" >> "$GITHUB_OUTPUT"
+          # -dev / -pre / -rc builds are published as pre-releases.
+          if [[ "$fw_version" == *-* ]]; then echo "prerelease=--prerelease" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Release notes from CHANGELOG.md
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # Print the "## [<version>]" section (with or without a leading V) up to the next "## [".
+          awk -v v="${VERSION#[vV]}" '
+            /^## \[/ { if (on) exit; h = $0; sub(/^## \[[vV]?/, "", h); sub(/\].*/, "", h); on = (h == v) }
+            on' "$FW_DIR/CHANGELOG.md" > notes.md
+          if [[ ! -s notes.md ]]; then
+            echo "::warning::no CHANGELOG.md section for $VERSION; using a generic note"
+            echo "lightpack-C3 $VERSION. See Firmware/lightpack-C3/CHANGELOG.md." > notes.md
+          fi
+          cat notes.md
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lightpack-C3-*
+          path: dist
+          merge-multiple: true
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          ls -l dist
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --verify-tag \
+            --title "lightpack-C3 $VERSION" \
+            --notes-file notes.md \
+            ${{ steps.version.outputs.prerelease }}
