@@ -874,6 +874,7 @@ function handleAck(frame) {
       for (const [key, value] of Object.entries(frame.changed)) {
         app.state[key] = value;
       }
+      // biome-ignore lint/suspicious/noPrototypeBuiltins: Object.hasOwn needs Chrome 93; the console supports Chrome/Edge 89+
       if (Object.prototype.hasOwnProperty.call(frame.changed, 'mode')) {
         setModeFromId(Number(frame.changed.mode));
       }
