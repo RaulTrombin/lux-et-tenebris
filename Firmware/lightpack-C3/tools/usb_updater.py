@@ -28,8 +28,7 @@ import time
 import urllib.request
 
 DEFAULT_BASE = (
-    "https://machadoleonardo94.github.io/lux-et-tenebris/"
-    "Firmware/lightpack-C3/releases/latest/"
+    "https://machadoleonardo94.github.io/lux-et-tenebris/Firmware/lightpack-C3/releases/latest/"
 )
 APP_OFFSET = 65536
 DEFAULT_CHUNK = 2048
@@ -64,14 +63,10 @@ def load_release(base: str) -> tuple[bytes, str, str]:
         raise SystemExit("manifest has no sha256 for the app image")
     actual = hashlib.sha256(image).hexdigest()
     if actual != expected:
-        raise SystemExit(
-            f"checksum mismatch: expected {expected}, downloaded {actual}"
-        )
+        raise SystemExit(f"checksum mismatch: expected {expected}, downloaded {actual}")
     size = manifest.get("size", len(image))
     if int(size) != len(image):
-        raise SystemExit(
-            f"size mismatch: manifest {size}, downloaded {len(image)}"
-        )
+        raise SystemExit(f"size mismatch: manifest {size}, downloaded {len(image)}")
     print(f"release {version}: {len(image)} bytes, sha256 {actual}")
     return image, expected, version
 
@@ -132,8 +127,8 @@ def open_serial(port: str):
 def update(port: str, image: bytes, chunk: int, timeout: float) -> int:
     ser = open_serial(port)
     try:
-        #* Opening the CDC port can reset the C3; the boot and the control link
-        #? take a few seconds. Retry the ping instead of losing the first one.
+        # * Opening the CDC port can reset the C3; the boot and the control link
+        # ? take a few seconds. Retry the ping instead of losing the first one.
         pong = None
         for _ in range(12):
             send(ser, "@PING")

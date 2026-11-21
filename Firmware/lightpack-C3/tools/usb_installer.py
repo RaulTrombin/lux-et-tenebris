@@ -35,8 +35,7 @@ import urllib.request
 from pathlib import Path
 
 DEFAULT_BASE = (
-    "https://machadoleonardo94.github.io/lux-et-tenebris/"
-    "Firmware/lightpack-C3/releases/latest/"
+    "https://machadoleonardo94.github.io/lux-et-tenebris/Firmware/lightpack-C3/releases/latest/"
 )
 BOOT_APP0_OFFSET = 0xE000
 APP_OFFSET = 0x10000

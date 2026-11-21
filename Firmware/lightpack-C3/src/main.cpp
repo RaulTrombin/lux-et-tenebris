@@ -28,121 +28,121 @@ void setup()
   //* First statement on purpose. esp_reset_reason() reports the cause of the
   //? PREVIOUS reset, so it has to be read before this boot does anything that
   //! could overwrite it.
-  boot_reset_reason = esp_reset_reason();
+    boot_reset_reason = esp_reset_reason();
 
   //* Arm both switches before the long bring-up below: setup_WIFI() can sit in the
   //? configuration portal for WIFI_PORTAL_TIMEOUT_S, and a press during that window
   //? is only remembered because the ISRs latch it. The pins, their pulls and their
   //* trigger edges are configured there too, so the two switches are declared in
   //* one place (services/readings.h) rather than one pin per service.
-  setup_button_interrupt();
+    setup_button_interrupt();
   // pinMode(servo_pin, OUTPUT);
-  pinMode(latch_enable, OUTPUT);
-  digitalWrite(latch_enable, HIGH); // Ensure latch is high at startup
-  setup_ESP32();
-  onboard_led.begin();
-  onboard_led.setPixelColor(0, 50, 0, 0);
-  onboard_led.show();
-  Serial.println("Status LED initialized");
+    pinMode(latch_enable, OUTPUT);
+    digitalWrite(latch_enable, HIGH); // Ensure latch is high at startup
+    setup_ESP32();
+    onboard_led.begin();
+    onboard_led.setPixelColor(0, 50, 0, 0);
+    onboard_led.show();
+    Serial.println("Status LED initialized");
   //* Size the CDC buffers BEFORE begin(). HWCDC::begin() only installs its
   //? 256-byte defaults when no queue exists yet, and the USB console's batch
   //! lines are several hundred bytes: a 256-byte RX queue would drop them. The
   //? tx ring is raised for the same reason - a 3 KB state frame is written in
   //* one call and must not have to wait for a tiny ring to drain in pieces.
-  Serial.setRxBufferSize(4096);
-  Serial.setTxBufferSize(4096);
-  Serial.begin(115200);
+    Serial.setRxBufferSize(4096);
+    Serial.setTxBufferSize(4096);
+    Serial.begin(115200);
   //! Default is 100 ms. If the host stops reading, a full tx ring would then
   //* hold up loop() - and therefore the LEDs - for a tenth of a second per
   //? frame. Ten milliseconds is enough for USB to drain a normal reply and
   //* short enough that a stalled browser cannot be felt on the strip.
-  Serial.setTxTimeoutMs(10);
-  delay(100);
+    Serial.setTxTimeoutMs(10);
+    delay(100);
 
-  Serial.println("\n\nESP32-C3 Lightpack Let it Go ");
-  Serial.println("===========================");
+    Serial.println("\n\nESP32-C3 Lightpack Let it Go ");
+    Serial.println("===========================");
 
   //* The power state comes from NVS and the reset reason, and has to be known
   //? BEFORE the strip self-test: safe mode replaces the R/G/B channel walk with a
   //? soft red fill, and a stress test that a reset interrupted is finalised here
   //* so its result survives the reconnect. It runs after Serial.begin() so the
   //? warning lines land in a console that is actually listening.
-  safe_mode_load_flag();
-  stress_test_boot();
-  sense_test_boot();
+    safe_mode_load_flag();
+    stress_test_boot();
+    sense_test_boot();
 
   //* The two facts a board that misbehaves on one supply and not another is
   //? asked for first: why the last run ended, and what the rail looked like
   //? before any LED drew current. Read here, at rest, so the number below is
   //* the unloaded V_REG and the self-test's own readings have a baseline.
-  boot_rail_mv = supply_rail_mv();
-  boot_report_print();
+    boot_rail_mv = supply_rail_mv();
+    boot_report_print();
 
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
-  Serial.println("LED strip initialized");
+    strip.begin();
+    strip.show(); // Initialize all pixels to 'off'
+    Serial.println("LED strip initialized");
 
 #if STRIP_SELFTEST_ON_BOOT
   //? Runs before the network comes up, so it works even when WiFi fails.
-  strip_channel_test();
+    strip_channel_test();
 #endif
 
   //? The return value used to be discarded, which made a bus that could not be claimed at all
   //! indistinguishable from a sensor that is simply not answering.
-  if (!Wire.begin(i2c_sda, i2c_scl, 100000))
-    Serial.printf("I2C FAILED to initialize (SDA=%d, SCL=%d)\n", i2c_sda, i2c_scl);
-  else
-    Serial.printf("I2C initialized (SDA=%d, SCL=%d)\n", i2c_sda, i2c_scl);
+    if (!Wire.begin(i2c_sda, i2c_scl, 100000))
+        Serial.printf("I2C FAILED to initialize (SDA=%d, SCL=%d)\n", i2c_sda, i2c_scl);
+    else
+        Serial.printf("I2C initialized (SDA=%d, SCL=%d)\n", i2c_sda, i2c_scl);
 
   //? A slave stuck holding SDA low must not hang the scan. The ESP32 Wire default is already
   //? 50 ms per transaction; it is set explicitly so a future change here is visible in the log.
-  Wire.setTimeOut(50);
+    Wire.setTimeOut(50);
 
   //* Bus scan first: it is what separates "no sensor" from "sensor on another address" from
   //* "sensor present but not an MPU6050". See services/i2c_scan.h.
-  i2c_scan_report();
+    i2c_scan_report();
 
   //* MPU6050: AD0 picks 0x68 or 0x69 and this board does not route AD0, so both are probed.
-  uint8_t mpu_address = 0;
-  gyro_started = mpu_begin_auto(mpu_address);
+    uint8_t mpu_address = 0;
+    gyro_started = mpu_begin_auto(mpu_address);
 
-  if (gyro_started)
-    Serial.printf("IMU initialized at 0x%02X\n", mpu_address);
-  else
-  {
-    Serial.println("Failed to find MPU6050 chip");
-    Serial.println("[IMU] The scan above says which of the causes it was:");
-    Serial.println("[IMU]   empty scan           -> wiring, power or pull-ups");
-    Serial.println("[IMU]   ACK at 0x68/0x69 only -> address was never the problem");
-    Serial.println("[IMU]   unsupported WHO_AM_I  -> neither the MPU6050 nor the MPU6500 family");
-  }
-
-  for (int k = 0; k < 5; k++)
-  {
-    if (!gyro_started)
-      onboard_led.setPixelColor(0, strip.Color(50 * (k % 2), 0, 0)); // Red
+    if (gyro_started)
+        Serial.printf("IMU initialized at 0x%02X\n", mpu_address);
     else
-      onboard_led.setPixelColor(0, strip.Color(0, 50 * (k % 2), 0)); // Green
-    onboard_led.show();
-    delay(200);
-  }
+    {
+        Serial.println("Failed to find MPU6050 chip");
+        Serial.println("[IMU] The scan above says which of the causes it was:");
+        Serial.println("[IMU]   empty scan           -> wiring, power or pull-ups");
+        Serial.println("[IMU]   ACK at 0x68/0x69 only -> address was never the problem");
+        Serial.println("[IMU]   unsupported WHO_AM_I  -> neither the MPU6050 nor the MPU6500 family");
+    }
+
+    for (int k = 0; k < 5; k++)
+    {
+        if (!gyro_started)
+            onboard_led.setPixelColor(0, strip.Color(50 * (k % 2), 0, 0)); // Red
+        else
+            onboard_led.setPixelColor(0, strip.Color(0, 50 * (k % 2), 0)); // Green
+        onboard_led.show();
+        delay(200);
+    }
 
   //* Restore the saved mode, palette and brightness before anything renders.
   //! This used to happen inside setup_webpage(), which only runs after a
   //! successful WiFi join. A board that could not reach WiFi therefore ran on
   //! compile-time defaults and silently ignored every setting the user had
   //! saved - including the palette. Configuration is not a network feature.
-  webpage_config_load();
-  strip_report_config();
+    webpage_config_load();
+    strip_report_config();
 
   //* The USB console's baseline is taken after the stored configuration has
   //? been restored, so its first "mode changed" event is a real change rather
   //* than the difference between compile-time defaults and NVS.
-  usb_control_begin();
+    usb_control_begin();
 
   //* If the device recovers from brownout, the power budget is set to 70% and the
   // user must click to acknowledge it and proceed.
-  safe_mode_warning();
+    safe_mode_warning();
 
   //* Network bring-up, then the device configuration webpage - except that the
   //? page is no longer started from here. setup_WIFI() reads the stored offline
@@ -152,39 +152,39 @@ void setup()
   //? online board whose router is slow may happen a minute after boot rather
   //* than here. wifi_loop() in loop() drives that.
   //? Set enable_network to false to keep the radio off and run fully offline.
-  const bool enable_network = true;
+    const bool enable_network = true;
 
-  if (!enable_network)
-  {
-    Serial.println("[NET] Network disabled at compile time - running offline");
-    WiFi.mode(WIFI_OFF);
-  }
-  else
-  {
-    setup_WIFI(true);
-  }
+    if (!enable_network)
+    {
+        Serial.println("[NET] Network disabled at compile time - running offline");
+        WiFi.mode(WIFI_OFF);
+    }
+    else
+    {
+        setup_WIFI(true);
+    }
 }
 
 void loop()
 {
   // power = (sin(millis() / 200.0) * 15) + 15; // Calculate brightness based on sine wave (0-30 range)
 
-  ArduinoOTA.handle();
-  read_adc();
+    ArduinoOTA.handle();
+    read_adc();
 
   /* Get new sensor events with the readings */
-  if (gyro_started)
-    mpu.getEvent(&a, &g, &temp);
+    if (gyro_started)
+        mpu.getEvent(&a, &g, &temp);
 
   //* Impact detection runs here, not inside an LED mode. It used to be sampled from
   //* flame_steps() at the LED frame rate and only while that mode was selected,
   //! which is 20 Hz and no detection at all under any other mode. impact_poll()
   //* rate-limits itself to IMPACT_SAMPLE_US and latches its result for whichever
   //* mode is drawing.
-  if (gyro_started)
-    impact_poll();
+    if (gyro_started)
+        impact_poll();
 
-  update_onboard_LED();
+    update_onboard_LED();
 
   //* User inputs, both polled here rather than from an ISR body: the interrupts
   //* only latch an edge, and the debounce, the classification, the mode change and
@@ -193,32 +193,32 @@ void loop()
   //? previous mode, 5 clicks power off, 3 s hold toggles the radio, 6 s hold opens
   //! the config hotspot. It is working on the current unit; GPIO9 below is the
   //* fallback if it ever fails again.
-  check_button();
+    check_button();
   //? Boot button (GPIO9): the security and recovery interface - 1 click previous
   //? mode, 5 clicks power off, 3 s hold toggles the radio, 6 s hold opens the
   //* config hotspot, 10 s hold wipes the saved networks and the page login.
-  check_boot_button();
+    check_boot_button();
 
   //* The network, after the inputs: a hold that flips offline mode is acted on in
   //? the same pass rather than the next one, and the check functions themselves
   //* perform the transition, so this only carries the join and the retry.
-  wifi_loop();
+    wifi_loop();
 
   //* The power stress test owns the strip for its whole run. It is deliberately
   //? blocking and serviced from one place, so no web request, WiFi burst or mode
   //* frame can perturb the ramp it is measuring.
-  stress_test_loop();
-  sense_test_loop();
-  power_guard_loop();
+    stress_test_loop();
+    sense_test_loop();
+    power_guard_loop();
 
-  update_strip(mode);
+    update_strip(mode);
 
-  webpage_loop();
+    webpage_loop();
 
   //* The USB console is serviced after the page and before the periodic log:
   //? a SET is applied in the same pass it arrived, and a reply is written
   //* before the 10 s telemetry block can add its own lines around it.
-  usb_control_loop();
+    usb_control_loop();
 
-  serial_outputs();
+    serial_outputs();
 }

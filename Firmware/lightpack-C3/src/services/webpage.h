@@ -101,111 +101,111 @@ String webpage_auth_password_value;
 
 void webpage_config_load()
 {
-  preferences.begin(WEBPAGE_NVS_NAMESPACE, true);
+    preferences.begin(WEBPAGE_NVS_NAMESPACE, true);
 
-  int saved_mode = preferences.getInt("mode", mode);
-  if (find_led_mode((uint8_t)saved_mode) == nullptr)
-  {
+    int saved_mode = preferences.getInt("mode", mode);
+    if (find_led_mode((uint8_t)saved_mode) == nullptr)
+    {
     //! The stored mode is no longer in the registry (firmware downgrade or
     //! a renamed entry) - fall back to the first mode rather than boot dark.
-    Serial.printf("[WEB] Stored mode %d is not in the registry, resetting\n", saved_mode);
-    saved_mode = 1;
-  }
-  mode = saved_mode;
+        Serial.printf("[WEB] Stored mode %d is not in the registry, resetting\n", saved_mode);
+        saved_mode = 1;
+    }
+    mode = saved_mode;
 
   //? Keys reuse the old names so an existing selection carries over.
-  palette.red = preferences.getUChar("red", palette.red);
-  palette.green = preferences.getUChar("green", palette.green);
-  palette.blue = preferences.getUChar("blue", palette.blue);
-  led_strip.brightness = preferences.getUChar("bright", led_strip.brightness);
+    palette.red = preferences.getUChar("red", palette.red);
+    palette.green = preferences.getUChar("green", palette.green);
+    palette.blue = preferences.getUChar("blue", palette.blue);
+    led_strip.brightness = preferences.getUChar("bright", led_strip.brightness);
 
-  whip.speed = preferences.getFloat("whspd", whip.speed);
-  whip.length = preferences.getUChar("whlen", whip.length);
-  whip.period = preferences.getUShort("whper", whip.period);
-  whip.peak = preferences.getUChar("whpk", whip.peak);
-  whip.offset = preferences.getUChar("whoff", whip.offset);
+    whip.speed = preferences.getFloat("whspd", whip.speed);
+    whip.length = preferences.getUChar("whlen", whip.length);
+    whip.period = preferences.getUShort("whper", whip.period);
+    whip.peak = preferences.getUChar("whpk", whip.peak);
+    whip.offset = preferences.getUChar("whoff", whip.offset);
 
-  rainbow.speed = preferences.getFloat("rbwspd", rainbow.speed);
-  rainbow.min_ms = preferences.getUShort("rbwmin", rainbow.min_ms);
-  rainbow.max_ms = preferences.getUShort("rbwmax", rainbow.max_ms);
-  rainbow.level = preferences.getUChar("rbwlev", rainbow.level);
+    rainbow.speed = preferences.getFloat("rbwspd", rainbow.speed);
+    rainbow.min_ms = preferences.getUShort("rbwmin", rainbow.min_ms);
+    rainbow.max_ms = preferences.getUShort("rbwmax", rainbow.max_ms);
+    rainbow.level = preferences.getUChar("rbwlev", rainbow.level);
 
   //* 0.6 device power budget. Kept in the live "device" namespace but NOT in a
   //? preset: it describes this cell/cable/strip, not a look.
-  power_budget_ma = preferences.getUShort("budget", power_budget_ma);
+    power_budget_ma = preferences.getUShort("budget", power_budget_ma);
 
-  strip_settings.active_leds = preferences.getUShort("leds", strip_settings.active_leds);
+    strip_settings.active_leds = preferences.getUShort("leds", strip_settings.active_leds);
 
-  flame.decay = preferences.getFloat("fldec", flame.decay);
-  flame.spatial = preferences.getFloat("flspat", flame.spatial);
-  flame.power_slope = preferences.getFloat("flpslope", flame.power_slope);
-  flame.power_max = preferences.getUChar("flpmax", flame.power_max);
-  flame.power_idle = preferences.getUChar("flpidle", flame.power_idle);
+    flame.decay = preferences.getFloat("fldec", flame.decay);
+    flame.spatial = preferences.getFloat("flspat", flame.spatial);
+    flame.power_slope = preferences.getFloat("flpslope", flame.power_slope);
+    flame.power_max = preferences.getUChar("flpmax", flame.power_max);
+    flame.power_idle = preferences.getUChar("flpidle", flame.power_idle);
 
-  fade.decay = preferences.getFloat("fddec", fade.decay);
-  fade.trigger = preferences.getFloat("fdtrg", fade.trigger);
-  fade.length_gain = preferences.getFloat("fdlen", fade.length_gain);
-  fade.length_z_gain = preferences.getFloat("fdlenz", fade.length_z_gain);
-  fade.length_base = preferences.getFloat("fdlenb", fade.length_base);
-  fade.power_gain = preferences.getFloat("fdpwr", fade.power_gain);
-  fade.power_base = preferences.getFloat("fdpwrb", fade.power_base);
-  fade.color_gain = preferences.getUChar("fdcol", fade.color_gain);
-  fade.idle_length = preferences.getUChar("fdidlen", fade.idle_length);
-  fade.idle_power = preferences.getUChar("fdidpwr", fade.idle_power);
+    fade.decay = preferences.getFloat("fddec", fade.decay);
+    fade.trigger = preferences.getFloat("fdtrg", fade.trigger);
+    fade.length_gain = preferences.getFloat("fdlen", fade.length_gain);
+    fade.length_z_gain = preferences.getFloat("fdlenz", fade.length_z_gain);
+    fade.length_base = preferences.getFloat("fdlenb", fade.length_base);
+    fade.power_gain = preferences.getFloat("fdpwr", fade.power_gain);
+    fade.power_base = preferences.getFloat("fdpwrb", fade.power_base);
+    fade.color_gain = preferences.getUChar("fdcol", fade.color_gain);
+    fade.idle_length = preferences.getUChar("fdidlen", fade.idle_length);
+    fade.idle_power = preferences.getUChar("fdidpwr", fade.idle_power);
 
-  step.baseline_tau_ms = preferences.getUShort("stbal", step.baseline_tau_ms);
-  step.threshold = preferences.getFloat("stthr", step.threshold);
-  step.release = preferences.getFloat("strel", step.release);
-  step.jerk_min = preferences.getFloat("stjerk", step.jerk_min);
-  step.min_gap_ms = preferences.getUShort("stming", step.min_gap_ms);
-  step.impact_min = preferences.getFloat("stimin", step.impact_min);
-  step.impact_max = preferences.getFloat("stimax", step.impact_max);
-  step.magnitude_min = preferences.getUChar("stmagmin", step.magnitude_min);
-  step.magnitude_max = preferences.getUChar("stmagmax", step.magnitude_max);
+    step.baseline_tau_ms = preferences.getUShort("stbal", step.baseline_tau_ms);
+    step.threshold = preferences.getFloat("stthr", step.threshold);
+    step.release = preferences.getFloat("strel", step.release);
+    step.jerk_min = preferences.getFloat("stjerk", step.jerk_min);
+    step.min_gap_ms = preferences.getUShort("stming", step.min_gap_ms);
+    step.impact_min = preferences.getFloat("stimin", step.impact_min);
+    step.impact_max = preferences.getFloat("stimax", step.impact_max);
+    step.magnitude_min = preferences.getUChar("stmagmin", step.magnitude_min);
+    step.magnitude_max = preferences.getUChar("stmagmax", step.magnitude_max);
 
-  preferences.end();
+    preferences.end();
 
   //! Always sanitise, even for values that never came from the page: a
   //! partially written or corrupt NVS entry must not reach the render maths.
   //! Order matters: strip_sanitize() owns the strip length and pulls every
   //! length measured in LEDs down with it, so it has to run first, and
   //! step_sanitize() has to have run before anything reads the magnitude scale.
-  strip_sanitize();
-  step_sanitize();
-  whip_sanitize();
-  flame_sanitize();
-  rainbow_sanitize();
-  fade_sanitize();
+    strip_sanitize();
+    step_sanitize();
+    whip_sanitize();
+    flame_sanitize();
+    rainbow_sanitize();
+    fade_sanitize();
 
-  Serial.printf("[WEB] Config loaded: mode=%d rgb=%u,%u,%u bright=%u\n",
-                mode, palette.red, palette.green, palette.blue,
-                led_strip.brightness);
-  Serial.printf("[WEB] Strip: %u of %d LEDs\n", strip_leds(), NUM_LEDS);
-  Serial.printf("[WEB] Impact: tau=%ums threshold=%.2fg release=%.2fg jerk=%.1fg/s gap=%ums\n",
-                step.baseline_tau_ms, step.threshold, step.release,
-                step.jerk_min, step.min_gap_ms);
-  Serial.printf("[WEB] Impact: impact=%.2f..%.2fg -> magnitude=%u..%u (max %u/s)\n",
-                step.impact_min, step.impact_max, step.magnitude_min,
-                step.magnitude_max, step_cadence_max_sps());
-  Serial.printf("[WEB] Whip: speed=%.2f len=%u period=%ums peak=%u offset=%u\n",
-                whip.speed, whip.length, whip.period, whip.peak, whip.offset);
-  Serial.printf("[WEB] Flame: decay=%.3f spatial=%.2f\n",
-                flame.decay, flame.spatial);
-  Serial.printf("[WEB] Flame: power slope=%.1f max=%u idle=%u (drawn in the palette)\n",
-                flame.power_slope, flame.power_max, flame.power_idle);
-  Serial.printf("[WEB] Rainbow: speed=%.2f gap=%u..%ums\n",
-                rainbow.speed, rainbow.min_ms, rainbow.max_ms);
-  Serial.printf("[WEB] Rainbow: level=%u/255\n", rainbow.level);
-  Serial.printf("[WEB] Fade: decay=%.3f trigger=%.2f len=%.0f/%.0f/%.0f color=%u idle=%u/%u\n",
-                fade.decay, fade.trigger, fade.length_gain, fade.length_z_gain,
-                fade.length_base, fade.color_gain, fade.idle_length, fade.idle_power);
-  power_suggested_ma = power_suggestion_ma();
-  Serial.printf("[WEB] Power: budget=%u mA guard=%u/255 suggested=%u mA\n",
-                power_budget_ma, power_guard_scale, power_suggested_ma);
+    Serial.printf("[WEB] Config loaded: mode=%d rgb=%u,%u,%u bright=%u\n",
+                  mode, palette.red, palette.green, palette.blue,
+                  led_strip.brightness);
+    Serial.printf("[WEB] Strip: %u of %d LEDs\n", strip_leds(), NUM_LEDS);
+    Serial.printf("[WEB] Impact: tau=%ums threshold=%.2fg release=%.2fg jerk=%.1fg/s gap=%ums\n",
+                  step.baseline_tau_ms, step.threshold, step.release,
+                  step.jerk_min, step.min_gap_ms);
+    Serial.printf("[WEB] Impact: impact=%.2f..%.2fg -> magnitude=%u..%u (max %u/s)\n",
+                  step.impact_min, step.impact_max, step.magnitude_min,
+                  step.magnitude_max, step_cadence_max_sps());
+    Serial.printf("[WEB] Whip: speed=%.2f len=%u period=%ums peak=%u offset=%u\n",
+                  whip.speed, whip.length, whip.period, whip.peak, whip.offset);
+    Serial.printf("[WEB] Flame: decay=%.3f spatial=%.2f\n",
+                  flame.decay, flame.spatial);
+    Serial.printf("[WEB] Flame: power slope=%.1f max=%u idle=%u (drawn in the palette)\n",
+                  flame.power_slope, flame.power_max, flame.power_idle);
+    Serial.printf("[WEB] Rainbow: speed=%.2f gap=%u..%ums\n",
+                  rainbow.speed, rainbow.min_ms, rainbow.max_ms);
+    Serial.printf("[WEB] Rainbow: level=%u/255\n", rainbow.level);
+    Serial.printf("[WEB] Fade: decay=%.3f trigger=%.2f len=%.0f/%.0f/%.0f color=%u idle=%u/%u\n",
+                  fade.decay, fade.trigger, fade.length_gain, fade.length_z_gain,
+                  fade.length_base, fade.color_gain, fade.idle_length, fade.idle_power);
+    power_suggested_ma = power_suggestion_ma();
+    Serial.printf("[WEB] Power: budget=%u mA guard=%u/255 suggested=%u mA\n",
+                  power_budget_ma, power_guard_scale, power_suggested_ma);
 
   //* NVS and RAM agree again, whatever they held before. The USB console reads
   //? this through /api/state to draw its unsaved dot; the page ignores it.
-  config_dirty = false;
+    config_dirty = false;
 }
 
 void webpage_config_save()
@@ -225,99 +225,99 @@ void webpage_config_save()
   //* holds 126 of them and flash is rated on the order of 100k erases per sector,
   //? so a page erase lands about every 126 mode changes. nvs_commit() is a no-op
   //* in this IDF version, so the per-put calls to it cost nothing either.
-  preferences.begin(WEBPAGE_NVS_NAMESPACE, false);
-  preferences.putInt("mode", mode);
-  preferences.putUChar("red", palette.red);
-  preferences.putUChar("green", palette.green);
-  preferences.putUChar("blue", palette.blue);
-  preferences.putUChar("bright", led_strip.brightness);
+    preferences.begin(WEBPAGE_NVS_NAMESPACE, false);
+    preferences.putInt("mode", mode);
+    preferences.putUChar("red", palette.red);
+    preferences.putUChar("green", palette.green);
+    preferences.putUChar("blue", palette.blue);
+    preferences.putUChar("bright", led_strip.brightness);
 
-  preferences.putFloat("whspd", whip.speed);
-  preferences.putUChar("whlen", whip.length);
-  preferences.putUShort("whper", whip.period);
-  preferences.putUChar("whpk", whip.peak);
-  preferences.putUChar("whoff", whip.offset);
+    preferences.putFloat("whspd", whip.speed);
+    preferences.putUChar("whlen", whip.length);
+    preferences.putUShort("whper", whip.period);
+    preferences.putUChar("whpk", whip.peak);
+    preferences.putUChar("whoff", whip.offset);
 
-  preferences.putFloat("rbwspd", rainbow.speed);
-  preferences.putUShort("rbwmin", rainbow.min_ms);
-  preferences.putUShort("rbwmax", rainbow.max_ms);
-  preferences.putUChar("rbwlev", rainbow.level);
+    preferences.putFloat("rbwspd", rainbow.speed);
+    preferences.putUShort("rbwmin", rainbow.min_ms);
+    preferences.putUShort("rbwmax", rainbow.max_ms);
+    preferences.putUChar("rbwlev", rainbow.level);
 
   //* Device power budget: written with the live configuration but deliberately
   //? absent from struct_preset, so a preset applied on another board cannot
   //* carry this board's cell/cable limit with it.
-  preferences.putUShort("budget", power_budget_ma);
+    preferences.putUShort("budget", power_budget_ma);
 
-  preferences.putUShort("leds", strip_settings.active_leds);
+    preferences.putUShort("leds", strip_settings.active_leds);
 
-  preferences.putFloat("fldec", flame.decay);
-  preferences.putFloat("flspat", flame.spatial);
-  preferences.putFloat("flpslope", flame.power_slope);
-  preferences.putUChar("flpmax", flame.power_max);
-  preferences.putUChar("flpidle", flame.power_idle);
+    preferences.putFloat("fldec", flame.decay);
+    preferences.putFloat("flspat", flame.spatial);
+    preferences.putFloat("flpslope", flame.power_slope);
+    preferences.putUChar("flpmax", flame.power_max);
+    preferences.putUChar("flpidle", flame.power_idle);
 
-  preferences.putFloat("fddec", fade.decay);
-  preferences.putFloat("fdtrg", fade.trigger);
-  preferences.putFloat("fdlen", fade.length_gain);
-  preferences.putFloat("fdlenz", fade.length_z_gain);
-  preferences.putFloat("fdlenb", fade.length_base);
-  preferences.putFloat("fdpwr", fade.power_gain);
-  preferences.putFloat("fdpwrb", fade.power_base);
-  preferences.putUChar("fdcol", fade.color_gain);
-  preferences.putUChar("fdidlen", fade.idle_length);
-  preferences.putUChar("fdidpwr", fade.idle_power);
+    preferences.putFloat("fddec", fade.decay);
+    preferences.putFloat("fdtrg", fade.trigger);
+    preferences.putFloat("fdlen", fade.length_gain);
+    preferences.putFloat("fdlenz", fade.length_z_gain);
+    preferences.putFloat("fdlenb", fade.length_base);
+    preferences.putFloat("fdpwr", fade.power_gain);
+    preferences.putFloat("fdpwrb", fade.power_base);
+    preferences.putUChar("fdcol", fade.color_gain);
+    preferences.putUChar("fdidlen", fade.idle_length);
+    preferences.putUChar("fdidpwr", fade.idle_power);
 
-  preferences.putUShort("stbal", step.baseline_tau_ms);
-  preferences.putFloat("stthr", step.threshold);
-  preferences.putFloat("strel", step.release);
-  preferences.putFloat("stjerk", step.jerk_min);
-  preferences.putUShort("stming", step.min_gap_ms);
+    preferences.putUShort("stbal", step.baseline_tau_ms);
+    preferences.putFloat("stthr", step.threshold);
+    preferences.putFloat("strel", step.release);
+    preferences.putFloat("stjerk", step.jerk_min);
+    preferences.putUShort("stming", step.min_gap_ms);
   //? The old cadence key is dropped rather than left behind: it described a gate
   //! that never did anything (see the note in services/gyros.h), so re-saving it
   //! would advertise a setting the firmware no longer has.
   //! Guarded: remove() logs "[E] nvs_erase_key fail: stmaxg NOT_FOUND" when the
   //* key was never present, which is the ordinary case on every mode change.
-  if (preferences.isKey("stmaxg"))
-    preferences.remove("stmaxg");
-  preferences.putFloat("stimin", step.impact_min);
-  preferences.putFloat("stimax", step.impact_max);
-  preferences.putUChar("stmagmin", step.magnitude_min);
-  preferences.putUChar("stmagmax", step.magnitude_max);
-  preferences.end();
+    if (preferences.isKey("stmaxg"))
+        preferences.remove("stmaxg");
+    preferences.putFloat("stimin", step.impact_min);
+    preferences.putFloat("stimax", step.impact_max);
+    preferences.putUChar("stmagmin", step.magnitude_min);
+    preferences.putUChar("stmagmax", step.magnitude_max);
+    preferences.end();
 
   //? Every caller of this function means "the live configuration is now the
   //? stored one": the web POST, the button's mode change, a preset apply and the
   //* USB COMMIT. Clearing the flag here is what keeps that true for all of them.
-  config_dirty = false;
+    config_dirty = false;
 }
 
 //* ---------------------- HELPERS ----------------------
 
 String webpage_json_escape(const char *value)
 {
-  String out;
-  if (value == nullptr)
-    return out;
+    String out;
+    if (value == nullptr)
+        return out;
 
-  for (const char *p = value; *p; p++)
-  {
-    if (*p == '"' || *p == '\\')
+    for (const char *p = value; *p; p++)
     {
-      out += '\\';
-      out += *p;
+        if (*p == '"' || *p == '\\')
+        {
+            out += '\\';
+            out += *p;
+        }
+        else if ((uint8_t)*p >= 0x20)
+        {
+            out += *p;
+        }
     }
-    else if ((uint8_t)*p >= 0x20)
-    {
-      out += *p;
-    }
-  }
-  return out;
+    return out;
 }
 
 String webpage_url()
 {
-  IPAddress ip = (WiFi.status() == WL_CONNECTED) ? WiFi.localIP() : WiFi.softAPIP();
-  return "http://" + ip.toString() + "/";
+    IPAddress ip = (WiFi.status() == WL_CONNECTED) ? WiFi.localIP() : WiFi.softAPIP();
+    return "http://" + ip.toString() + "/";
 }
 
 //* ---------------------- HANDLERS ----------------------
@@ -328,388 +328,388 @@ String webpage_url()
 //* so a field added here cannot exist on one transport and be missing on the other.
 void webpage_state_json(String &json)
 {
-  const struct_ledMode *entry = find_led_mode((uint8_t)mode);
+    const struct_ledMode *entry = find_led_mode((uint8_t)mode);
 
-  json += F("{\"mode\":");
-  json += String(mode);
-  json += F(",\"mode_key\":\"");
-  json += webpage_json_escape(entry ? entry->key : "unknown");
-  json += F("\",\"mode_label\":\"");
-  json += webpage_json_escape(entry ? entry->label : "Unknown");
-  json += F("\",\"red\":");
-  json += String(palette.red);
-  json += F(",\"green\":");
-  json += String(palette.green);
-  json += F(",\"blue\":");
-  json += String(palette.blue);
-  json += F(",\"brightness\":");
-  json += String(led_strip.brightness);
-  json += F(",\"firmware\":\"" LIGHTPACK_FW_VERSION "\"");
-  json += F(",\"whip_speed\":");
-  json += String(whip.speed, 2);
-  json += F(",\"whip_length\":");
-  json += String(whip.length);
-  json += F(",\"whip_period\":");
-  json += String(whip.period);
-  json += F(",\"whip_peak\":");
-  json += String(whip.peak);
-  json += F(",\"whip_offset\":");
-  json += String(whip.offset);
+    json += F("{\"mode\":");
+    json += String(mode);
+    json += F(",\"mode_key\":\"");
+    json += webpage_json_escape(entry ? entry->key : "unknown");
+    json += F("\",\"mode_label\":\"");
+    json += webpage_json_escape(entry ? entry->label : "Unknown");
+    json += F("\",\"red\":");
+    json += String(palette.red);
+    json += F(",\"green\":");
+    json += String(palette.green);
+    json += F(",\"blue\":");
+    json += String(palette.blue);
+    json += F(",\"brightness\":");
+    json += String(led_strip.brightness);
+    json += F(",\"firmware\":\"" LIGHTPACK_FW_VERSION "\"");
+    json += F(",\"whip_speed\":");
+    json += String(whip.speed, 2);
+    json += F(",\"whip_length\":");
+    json += String(whip.length);
+    json += F(",\"whip_period\":");
+    json += String(whip.period);
+    json += F(",\"whip_peak\":");
+    json += String(whip.peak);
+    json += F(",\"whip_offset\":");
+    json += String(whip.offset);
   //* Derived from the tunables above, so the page can warn about saturation
   //* instead of the user having to work out the crossing time by hand.
-  json += F(",\"whip_travel_ms\":");
-  json += String(whip_travel_ms());
-  json += F(",\"whip_in_flight\":");
-  json += String(whip_in_flight());
-  json += F(",\"whip_max_heads\":");
-  json += String(WHIP_MAX_HEADS);
+    json += F(",\"whip_travel_ms\":");
+    json += String(whip_travel_ms());
+    json += F(",\"whip_in_flight\":");
+    json += String(whip_in_flight());
+    json += F(",\"whip_max_heads\":");
+    json += String(WHIP_MAX_HEADS);
   //* Range constants for the host tools. The device clamps every write anyway;
   //? exporting them is what stops a second copy of these numbers from drifting
   //* away from the firmware's own.
-  json += F(",\"whip_speed_min\":");
-  json += String(WHIP_SPEED_MIN, 1);
-  json += F(",\"whip_speed_max\":");
-  json += String(WHIP_SPEED_MAX, 1);
-  json += F(",\"whip_length_min\":");
-  json += String(WHIP_LENGTH_MIN);
-  json += F(",\"whip_period_min\":");
-  json += String(WHIP_PERIOD_MIN);
-  json += F(",\"whip_period_max\":");
-  json += String(WHIP_PERIOD_MAX);
-  json += F(",\"rainbow_speed\":");
-  json += String(rainbow.speed, 2);
-  json += F(",\"rainbow_min_ms\":");
-  json += String(rainbow.min_ms);
-  json += F(",\"rainbow_max_ms\":");
-  json += String(rainbow.max_ms);
+    json += F(",\"whip_speed_min\":");
+    json += String(WHIP_SPEED_MIN, 1);
+    json += F(",\"whip_speed_max\":");
+    json += String(WHIP_SPEED_MAX, 1);
+    json += F(",\"whip_length_min\":");
+    json += String(WHIP_LENGTH_MIN);
+    json += F(",\"whip_period_min\":");
+    json += String(WHIP_PERIOD_MIN);
+    json += F(",\"whip_period_max\":");
+    json += String(WHIP_PERIOD_MAX);
+    json += F(",\"rainbow_speed\":");
+    json += String(rainbow.speed, 2);
+    json += F(",\"rainbow_min_ms\":");
+    json += String(rainbow.min_ms);
+    json += F(",\"rainbow_max_ms\":");
+    json += String(rainbow.max_ms);
   //* Derived, so the page can explain how the speed and the wait interact
   //* instead of leaving the user to work out band widths by hand.
-  json += F(",\"rainbow_travel_ms\":");
-  json += String(rainbow_travel_ms());
-  json += F(",\"rainbow_band_min_leds\":");
-  json += String(rainbow_band_leds(rainbow.min_ms));
-  json += F(",\"rainbow_band_max_leds\":");
-  json += String(rainbow_band_leds(rainbow.max_ms));
-  json += F(",\"rainbow_gap_floor_ms\":");
-  json += String(RAINBOW_GAP_MIN_MS);
-  json += F(",\"rainbow_gap_ceiling_ms\":");
-  json += String(RAINBOW_GAP_MAX_MS);
-  json += F(",\"rainbow_speed_min\":");
-  json += String(RAINBOW_SPEED_MIN, 1);
-  json += F(",\"rainbow_speed_max\":");
-  json += String(RAINBOW_SPEED_MAX, 1);
-  json += F(",\"rainbow_level\":");
-  json += String(rainbow.level);
+    json += F(",\"rainbow_travel_ms\":");
+    json += String(rainbow_travel_ms());
+    json += F(",\"rainbow_band_min_leds\":");
+    json += String(rainbow_band_leds(rainbow.min_ms));
+    json += F(",\"rainbow_band_max_leds\":");
+    json += String(rainbow_band_leds(rainbow.max_ms));
+    json += F(",\"rainbow_gap_floor_ms\":");
+    json += String(RAINBOW_GAP_MIN_MS);
+    json += F(",\"rainbow_gap_ceiling_ms\":");
+    json += String(RAINBOW_GAP_MAX_MS);
+    json += F(",\"rainbow_speed_min\":");
+    json += String(RAINBOW_SPEED_MIN, 1);
+    json += F(",\"rainbow_speed_max\":");
+    json += String(RAINBOW_SPEED_MAX, 1);
+    json += F(",\"rainbow_level\":");
+    json += String(rainbow.level);
 
   //* Gyro fade (mode 4) tunables and their ranges, 0.6.
-  json += F(",\"fade_decay\":");
-  json += String(fade.decay, 3);
-  json += F(",\"fade_trigger\":");
-  json += String(fade.trigger, 2);
-  json += F(",\"fade_length_gain\":");
-  json += String(fade.length_gain, 1);
-  json += F(",\"fade_length_z_gain\":");
-  json += String(fade.length_z_gain, 1);
-  json += F(",\"fade_length_base\":");
-  json += String(fade.length_base, 1);
-  json += F(",\"fade_power_gain\":");
-  json += String(fade.power_gain, 1);
-  json += F(",\"fade_power_base\":");
-  json += String(fade.power_base, 1);
-  json += F(",\"fade_color_gain\":");
-  json += String(fade.color_gain);
-  json += F(",\"fade_idle_length\":");
-  json += String(fade.idle_length);
-  json += F(",\"fade_idle_power\":");
-  json += String(fade.idle_power);
+    json += F(",\"fade_decay\":");
+    json += String(fade.decay, 3);
+    json += F(",\"fade_trigger\":");
+    json += String(fade.trigger, 2);
+    json += F(",\"fade_length_gain\":");
+    json += String(fade.length_gain, 1);
+    json += F(",\"fade_length_z_gain\":");
+    json += String(fade.length_z_gain, 1);
+    json += F(",\"fade_length_base\":");
+    json += String(fade.length_base, 1);
+    json += F(",\"fade_power_gain\":");
+    json += String(fade.power_gain, 1);
+    json += F(",\"fade_power_base\":");
+    json += String(fade.power_base, 1);
+    json += F(",\"fade_color_gain\":");
+    json += String(fade.color_gain);
+    json += F(",\"fade_idle_length\":");
+    json += String(fade.idle_length);
+    json += F(",\"fade_idle_power\":");
+    json += String(fade.idle_power);
 
   //* Strip size. `num_leds` stays the size of the NeoPixel buffer - the hard
   //* ceiling the driver owns - while `active_leds` is what the scripts light,
   //* which is what every slider measured in LEDs has to be bounded by.
-  json += F(",\"num_leds\":");
-  json += String(NUM_LEDS);
-  json += F(",\"active_leds\":");
-  json += String(strip_leds());
+    json += F(",\"num_leds\":");
+    json += String(NUM_LEDS);
+    json += F(",\"active_leds\":");
+    json += String(strip_leds());
   //* The USB console addresses this value by its /api/config field name, `leds`,
   //? while the HTTP page reads the longer `active_leds`. Both are the same live
   //! count; exporting only one of them is what left the console's LED-count input
   //* blank while its subtitle had the number.
-  json += F(",\"leds\":");
-  json += String(strip_leds());
-  json += F(",\"strip_leds_min\":");
-  json += String(STRIP_LEDS_MIN);
+    json += F(",\"leds\":");
+    json += String(strip_leds());
+    json += F(",\"strip_leds_min\":");
+    json += String(STRIP_LEDS_MIN);
 
   //* Safe mode and the last power stress test. These are DEVICE state, not
   //? configuration: they describe the cell, cable and strip on this board and
   //* must not travel in a preset. The console renders them on every connect, so
   //? a result in NVS is never lost to a reconnect.
-  json += F(",\"safe_boot\":");
-  json += safe_boot_active ? F("true") : F("false");
-  json += F(",\"safe_pct\":");
-  json += String(POWER_SAFE_PERCENT);
-  json += F(",\"mcu_ma\":");
-  json += String(POWER_MCU_MA);
+    json += F(",\"safe_boot\":");
+    json += safe_boot_active ? F("true") : F("false");
+    json += F(",\"safe_pct\":");
+    json += String(POWER_SAFE_PERCENT);
+    json += F(",\"mcu_ma\":");
+    json += String(POWER_MCU_MA);
 
   //* 0.6 power budget and 10 Hz guard. `budget_brightness` is the worst-case
   //? white ceiling the budget implies for this strip, so the page can show why
   //* the configured brightness may be capped.
-  json += F(",\"budget_ma\":");
-  json += String(power_budget_ma);
+    json += F(",\"budget_ma\":");
+    json += String(power_budget_ma);
   //? The USB console addresses this by its /api/config argument name, `budget`.
-  json += F(",\"budget\":");
-  json += String(power_budget_ma);
-  json += F(",\"budget_min\":");
-  json += String(POWER_BUDGET_MIN_MA);
-  json += F(",\"budget_default\":");
-  json += String(POWER_BUDGET_DEFAULT_MA);
-  json += F(",\"budget_max\":");
-  json += String(POWER_BUDGET_MAX_MA);
-  json += F(",\"guard_scale\":");
-  json += String(power_guard_scale);
-  json += F(",\"guard_active\":");
-  json += power_guard_active ? F("true") : F("false");
-  json += F(",\"guard_floor_mv\":");
-  json += String(POWER_GUARD_FLOOR_MV);
-  json += F(",\"guard_recover_mv\":");
-  json += String(POWER_GUARD_RECOVER_MV);
-  power_suggested_ma = power_suggestion_ma();
-  json += F(",\"power_suggested_ma\":");
-  json += String(power_suggested_ma);
+    json += F(",\"budget\":");
+    json += String(power_budget_ma);
+    json += F(",\"budget_min\":");
+    json += String(POWER_BUDGET_MIN_MA);
+    json += F(",\"budget_default\":");
+    json += String(POWER_BUDGET_DEFAULT_MA);
+    json += F(",\"budget_max\":");
+    json += String(POWER_BUDGET_MAX_MA);
+    json += F(",\"guard_scale\":");
+    json += String(power_guard_scale);
+    json += F(",\"guard_active\":");
+    json += power_guard_active ? F("true") : F("false");
+    json += F(",\"guard_floor_mv\":");
+    json += String(POWER_GUARD_FLOOR_MV);
+    json += F(",\"guard_recover_mv\":");
+    json += String(POWER_GUARD_RECOVER_MV);
+    power_suggested_ma = power_suggestion_ma();
+    json += F(",\"power_suggested_ma\":");
+    json += String(power_suggested_ma);
 
-  uint16_t budget_brightness = 255;
-  const uint16_t budget_leds = strip_leds();
-  if (budget_leds > 0)
-  {
-    const uint32_t full_ma = (uint32_t)budget_leds * 60UL;
-    const uint32_t cap = ((uint32_t)power_budget_ma * 255UL) / full_ma;
-    budget_brightness = (cap < 255UL) ? (uint16_t)cap : 255;
-  }
-  json += F(",\"budget_brightness\":");
-  json += String(budget_brightness);
-  json += F(",\"stress_run\":");
-  json += stress_run_flag ? F("true") : F("false");
-  json += F(",\"stress_result\":");
-  json += String(stress_last.result);
-  json += F(",\"stress_phase\":");
-  json += String(stress_last.phase);
-  json += F(",\"stress_color\":");
-  json += String(stress_last.color);
-  json += F(",\"stress_leds\":");
-  json += String(stress_last.leds);
-  json += F(",\"stress_brightness\":");
-  json += String(stress_last.brightness);
-  json += F(",\"stress_est_ma\":");
-  json += String(stress_last.est_ma);
-  json += F(",\"stress_v_start\":");
-  json += String(stress_last.v_start);
-  json += F(",\"stress_v_min\":");
-  json += String(stress_last.v_min);
-  json += F(",\"stress_sag_mv\":");
-  json += String(stress_last.sag_mv);
-  json += F(",\"stress_v_off\":");
-  json += String(stress_last.v_off);
-  json += F(",\"stress_v_on\":");
-  json += String(stress_last.v_on);
-  json += F(",\"stress_r_mohm\":");
-  json += String(stress_last.r_mohm);
-  json += F(",\"stress_elapsed_ms\":");
-  json += String(stress_last.elapsed_ms);
-  json += F(",\"stress_ceiling_ma\":");
-  json += String(stress_last.ceiling_ma);
-  json += F(",\"stress_step_ms\":");
-  json += String(stress_last.step_ms);
-  json += F(",\"stress_rail_floor_mv\":");
-  json += String(stress_last.rail_floor_mv);
+    uint16_t budget_brightness = 255;
+    const uint16_t budget_leds = strip_leds();
+    if (budget_leds > 0)
+    {
+        const uint32_t full_ma = (uint32_t)budget_leds * 60UL;
+        const uint32_t cap = ((uint32_t)power_budget_ma * 255UL) / full_ma;
+        budget_brightness = (cap < 255UL) ? (uint16_t)cap : 255;
+    }
+    json += F(",\"budget_brightness\":");
+    json += String(budget_brightness);
+    json += F(",\"stress_run\":");
+    json += stress_run_flag ? F("true") : F("false");
+    json += F(",\"stress_result\":");
+    json += String(stress_last.result);
+    json += F(",\"stress_phase\":");
+    json += String(stress_last.phase);
+    json += F(",\"stress_color\":");
+    json += String(stress_last.color);
+    json += F(",\"stress_leds\":");
+    json += String(stress_last.leds);
+    json += F(",\"stress_brightness\":");
+    json += String(stress_last.brightness);
+    json += F(",\"stress_est_ma\":");
+    json += String(stress_last.est_ma);
+    json += F(",\"stress_v_start\":");
+    json += String(stress_last.v_start);
+    json += F(",\"stress_v_min\":");
+    json += String(stress_last.v_min);
+    json += F(",\"stress_sag_mv\":");
+    json += String(stress_last.sag_mv);
+    json += F(",\"stress_v_off\":");
+    json += String(stress_last.v_off);
+    json += F(",\"stress_v_on\":");
+    json += String(stress_last.v_on);
+    json += F(",\"stress_r_mohm\":");
+    json += String(stress_last.r_mohm);
+    json += F(",\"stress_elapsed_ms\":");
+    json += String(stress_last.elapsed_ms);
+    json += F(",\"stress_ceiling_ma\":");
+    json += String(stress_last.ceiling_ma);
+    json += F(",\"stress_step_ms\":");
+    json += String(stress_last.step_ms);
+    json += F(",\"stress_rail_floor_mv\":");
+    json += String(stress_last.rail_floor_mv);
   //* Test-only limits for the console's selectors. The normal budget is a later
   //? 0.6 field; these two are what the Diagnostics panel is allowed to ask for.
-  json += F(",\"stress_ceiling_min\":");
-  json += String((unsigned)STRESS_CEILING_MIN_MA);
-  json += F(",\"stress_ceiling_default\":");
-  json += String((unsigned)STRESS_CEILING_DEFAULT_MA);
-  json += F(",\"stress_ceiling_max\":");
-  json += String((unsigned)STRESS_CEILING_MAX_MA);
-  json += F(",\"stress_step_fast_ms\":");
-  json += String((unsigned)STRESS_STEP_FAST_MS);
-  json += F(",\"stress_step_precise_ms\":");
-  json += String((unsigned)STRESS_STEP_PRECISE_MS);
-  json += F(",\"stress_rail_floor_default\":");
-  json += String((unsigned)STRESS_RAIL_FLOOR_DEFAULT_MV);
+    json += F(",\"stress_ceiling_min\":");
+    json += String((unsigned)STRESS_CEILING_MIN_MA);
+    json += F(",\"stress_ceiling_default\":");
+    json += String((unsigned)STRESS_CEILING_DEFAULT_MA);
+    json += F(",\"stress_ceiling_max\":");
+    json += String((unsigned)STRESS_CEILING_MAX_MA);
+    json += F(",\"stress_step_fast_ms\":");
+    json += String((unsigned)STRESS_STEP_FAST_MS);
+    json += F(",\"stress_step_precise_ms\":");
+    json += String((unsigned)STRESS_STEP_PRECISE_MS);
+    json += F(",\"stress_rail_floor_default\":");
+    json += String((unsigned)STRESS_RAIL_FLOOR_DEFAULT_MV);
 
   //* Standalone channel-resistance sweep. Separate from the stress record: one
   //? short burst, no ramp, so a 1..100 LED linearity run is quick.
-  json += F(",\"sense_run\":");
-  json += sense_run_flag ? F("true") : F("false");
-  json += F(",\"sense_count\":");
-  json += String(sense_last.count);
-  json += F(",\"sense_burst_ms\":");
-  json += String(sense_last.burst_ms);
-  json += F(",\"sense_ma\":");
-  json += String(sense_last.ma);
-  json += F(",\"sense_v_off\":");
-  json += String(sense_last.v_off);
-  json += F(",\"sense_v_on\":");
-  json += String(sense_last.v_on);
-  json += F(",\"sense_r_mohm\":");
-  json += String(sense_last.r_mohm);
-  json += F(",\"sense_elapsed_ms\":");
-  json += String(sense_last.elapsed_ms);
-  json += F(",\"sense_count_min\":");
-  json += String(SENSE_COUNT_MIN);
-  json += F(",\"sense_count_max\":");
-  json += String(SENSE_COUNT_MAX);
-  json += F(",\"sense_burst_fast_ms\":");
-  json += String(SENSE_BURST_FAST_MS);
-  json += F(",\"sense_burst_precise_ms\":");
-  json += String(SENSE_BURST_PRECISE_MS);
+    json += F(",\"sense_run\":");
+    json += sense_run_flag ? F("true") : F("false");
+    json += F(",\"sense_count\":");
+    json += String(sense_last.count);
+    json += F(",\"sense_burst_ms\":");
+    json += String(sense_last.burst_ms);
+    json += F(",\"sense_ma\":");
+    json += String(sense_last.ma);
+    json += F(",\"sense_v_off\":");
+    json += String(sense_last.v_off);
+    json += F(",\"sense_v_on\":");
+    json += String(sense_last.v_on);
+    json += F(",\"sense_r_mohm\":");
+    json += String(sense_last.r_mohm);
+    json += F(",\"sense_elapsed_ms\":");
+    json += String(sense_last.elapsed_ms);
+    json += F(",\"sense_count_min\":");
+    json += String(SENSE_COUNT_MIN);
+    json += F(",\"sense_count_max\":");
+    json += String(SENSE_COUNT_MAX);
+    json += F(",\"sense_burst_fast_ms\":");
+    json += String(SENSE_BURST_FAST_MS);
+    json += F(",\"sense_burst_precise_ms\":");
+    json += String(SENSE_BURST_PRECISE_MS);
 
   //* Which of the three network states the board is in. Reaching this endpoint at
   //? all means NET_CONNECTED, so this is mostly for the page's own consistency -
   //* but it is also what says whether the radio is on, which the page cannot infer.
-  json += F(",\"net\":\"");
-  json += wifi_state_name();
-  json += F("\",\"offline_mode\":");
-  json += (net_state == NET_OFFLINE) ? F("true") : F("false");
+    json += F(",\"net\":\"");
+    json += wifi_state_name();
+    json += F("\",\"offline_mode\":");
+    json += (net_state == NET_OFFLINE) ? F("true") : F("false");
   //* The provisioning hotspot is pumped inside setup(), where loop() is not
   //? running. Saying so here is what lets the console explain a board that is
   //* otherwise reporting "offline" while its radio is very much on.
-  json += F(",\"portal\":");
-  json += usb_portal_window ? F("true") : F("false");
+    json += F(",\"portal\":");
+    json += usb_portal_window ? F("true") : F("false");
   //? RAM differs from NVS: set by a transient USB SET, cleared by any save or a
   //* reload. The browser page ignores it; the USB console draws its unsaved dot.
-  json += F(",\"dirty\":");
-  json += config_dirty ? F("true") : F("false");
+    json += F(",\"dirty\":");
+    json += config_dirty ? F("true") : F("false");
 
   //* Step flame tunables.
-  json += F(",\"flame_decay\":");
-  json += String(flame.decay, 3);
-  json += F(",\"flame_spatial\":");
-  json += String(flame.spatial, 2);
-  json += F(",\"flame_power_slope\":");
-  json += String(flame.power_slope, 1);
-  json += F(",\"flame_power_max\":");
-  json += String(flame.power_max);
-  json += F(",\"flame_power_idle\":");
-  json += String(flame.power_idle);
+    json += F(",\"flame_decay\":");
+    json += String(flame.decay, 3);
+    json += F(",\"flame_spatial\":");
+    json += String(flame.spatial, 2);
+    json += F(",\"flame_power_slope\":");
+    json += String(flame.power_slope, 1);
+    json += F(",\"flame_power_max\":");
+    json += String(flame.power_max);
+    json += F(",\"flame_power_idle\":");
+    json += String(flame.power_idle);
   //* Limits and the detector's scale, shipped so retuning a range or the
   //* magnitude window in the firmware cannot leave the page asking for values
   //* that would only be clamped away.
-  json += F(",\"flame_decay_max\":");
-  json += String(FLAME_DECAY_MAX, 3);
-  json += F(",\"flame_spatial_max\":");
-  json += String(FLAME_SPATIAL_MAX, 1);
-  json += F(",\"flame_decay_min\":");
-  json += String(FLAME_DECAY_MIN, 3);
-  json += F(",\"flame_spatial_min\":");
-  json += String(FLAME_SPATIAL_MIN, 1);
-  json += F(",\"flame_power_slope_max\":");
-  json += String(FLAME_POWER_SLOPE_MAX, 1);
+    json += F(",\"flame_decay_max\":");
+    json += String(FLAME_DECAY_MAX, 3);
+    json += F(",\"flame_spatial_max\":");
+    json += String(FLAME_SPATIAL_MAX, 1);
+    json += F(",\"flame_decay_min\":");
+    json += String(FLAME_DECAY_MIN, 3);
+    json += F(",\"flame_spatial_min\":");
+    json += String(FLAME_SPATIAL_MIN, 1);
+    json += F(",\"flame_power_slope_max\":");
+    json += String(FLAME_POWER_SLOPE_MAX, 1);
 
   //* Impact detection tunables. The reported scale is the LIVE one, because
   //* magnitude_min/max are themselves settings: the page's flame description
   //* and the detector's output have to be talking about the same range.
-  json += F(",\"step_baseline_tau_ms\":");
-  json += String(step.baseline_tau_ms);
-  json += F(",\"step_threshold\":");
-  json += String(step.threshold, 2);
-  json += F(",\"step_release\":");
-  json += String(step.release, 2);
-  json += F(",\"step_jerk_min\":");
-  json += String(step.jerk_min, 1);
-  json += F(",\"step_min_gap_ms\":");
-  json += String(step.min_gap_ms);
-  json += F(",\"step_impact_min\":");
-  json += String(step.impact_min, 2);
-  json += F(",\"step_impact_max\":");
-  json += String(step.impact_max, 2);
-  json += F(",\"step_magnitude_min\":");
-  json += String(step.magnitude_min);
-  json += F(",\"step_magnitude_max\":");
-  json += String(step.magnitude_max);
-  json += F(",\"step_baseline_tau_min_ms\":");
-  json += String(STEP_BASELINE_TAU_MIN_MS);
-  json += F(",\"step_baseline_tau_max_ms\":");
-  json += String(STEP_BASELINE_TAU_MAX_MS);
-  json += F(",\"step_jerk_max\":");
-  json += String(STEP_JERK_MAX, 1);
-  json += F(",\"step_jerk_floor\":");
-  json += String(STEP_JERK_MIN, 1);
-  json += F(",\"step_threshold_min\":");
-  json += String(STEP_THRESHOLD_MIN, 2);
-  json += F(",\"step_threshold_max\":");
-  json += String(STEP_THRESHOLD_MAX, 1);
-  json += F(",\"step_release_min\":");
-  json += String(STEP_RELEASE_MIN, 2);
-  json += F(",\"step_gap_min_ms\":");
-  json += String(STEP_GAP_MIN_MS);
-  json += F(",\"step_gap_max_ms\":");
-  json += String(STEP_GAP_MAX_MS);
-  json += F(",\"step_impact_min_floor\":");
-  json += String(STEP_IMPACT_MIN, 1);
-  json += F(",\"step_impact_max_ceiling\":");
-  json += String(STEP_IMPACT_MAX, 1);
-  json += F(",\"step_cadence_max_sps\":");
-  json += String(step_cadence_max_sps());
-  json += F(",\"step_scale_min\":");
-  json += String(step.magnitude_min);
-  json += F(",\"step_scale_max\":");
-  json += String(step.magnitude_max);
+    json += F(",\"step_baseline_tau_ms\":");
+    json += String(step.baseline_tau_ms);
+    json += F(",\"step_threshold\":");
+    json += String(step.threshold, 2);
+    json += F(",\"step_release\":");
+    json += String(step.release, 2);
+    json += F(",\"step_jerk_min\":");
+    json += String(step.jerk_min, 1);
+    json += F(",\"step_min_gap_ms\":");
+    json += String(step.min_gap_ms);
+    json += F(",\"step_impact_min\":");
+    json += String(step.impact_min, 2);
+    json += F(",\"step_impact_max\":");
+    json += String(step.impact_max, 2);
+    json += F(",\"step_magnitude_min\":");
+    json += String(step.magnitude_min);
+    json += F(",\"step_magnitude_max\":");
+    json += String(step.magnitude_max);
+    json += F(",\"step_baseline_tau_min_ms\":");
+    json += String(STEP_BASELINE_TAU_MIN_MS);
+    json += F(",\"step_baseline_tau_max_ms\":");
+    json += String(STEP_BASELINE_TAU_MAX_MS);
+    json += F(",\"step_jerk_max\":");
+    json += String(STEP_JERK_MAX, 1);
+    json += F(",\"step_jerk_floor\":");
+    json += String(STEP_JERK_MIN, 1);
+    json += F(",\"step_threshold_min\":");
+    json += String(STEP_THRESHOLD_MIN, 2);
+    json += F(",\"step_threshold_max\":");
+    json += String(STEP_THRESHOLD_MAX, 1);
+    json += F(",\"step_release_min\":");
+    json += String(STEP_RELEASE_MIN, 2);
+    json += F(",\"step_gap_min_ms\":");
+    json += String(STEP_GAP_MIN_MS);
+    json += F(",\"step_gap_max_ms\":");
+    json += String(STEP_GAP_MAX_MS);
+    json += F(",\"step_impact_min_floor\":");
+    json += String(STEP_IMPACT_MIN, 1);
+    json += F(",\"step_impact_max_ceiling\":");
+    json += String(STEP_IMPACT_MAX, 1);
+    json += F(",\"step_cadence_max_sps\":");
+    json += String(step_cadence_max_sps());
+    json += F(",\"step_scale_min\":");
+    json += String(step.magnitude_min);
+    json += F(",\"step_scale_max\":");
+    json += String(step.magnitude_max);
   //* What the current settings actually produce at the two ends of the
   //* detector's scale, so the page can describe the flash instead of making the
   //* user work out power_slope * magnitude by hand.
-  json += F(",\"flame_power_soft\":");
-  json += String(flame_power_for((float)step.magnitude_min));
-  json += F(",\"flame_power_hard\":");
-  json += String(flame_power_for((float)step.magnitude_max));
+    json += F(",\"flame_power_soft\":");
+    json += String(flame_power_for((float)step.magnitude_min));
+    json += F(",\"flame_power_hard\":");
+    json += String(flame_power_for((float)step.magnitude_max));
 
-  json += F(",\"uptime_ms\":");
-  json += String(millis());
+    json += F(",\"uptime_ms\":");
+    json += String(millis());
   //* Diagnostics that used to exist only on the optional tick stream. The
   //? console can now fill Loop rate / LED rail / Free heap from the state even
   //* when the Live stream is off.
-  json += F(",\"loop_rate\":");
-  json += String((unsigned)usb_loop_rate);
-  json += F(",\"rail_mv\":");
+    json += F(",\"loop_rate\":");
+    json += String((unsigned)usb_loop_rate);
+    json += F(",\"rail_mv\":");
   //* The live averaged rail, not the adcVoltage scratch: that one is only
   //? refreshed by the 10 s [ADC] telemetry line, so the diagnostics read 0
   //* until the first telemetry tick.
-  json += String((unsigned long)supply_rail_mv());
-  json += F(",\"free_heap\":");
-  json += String((unsigned long)ESP.getFreeHeap());
-  json += F(",\"gyro\":");
-  json += gyro_started ? "true" : "false";
-  json += F(",\"rssi\":");
-  json += String(WiFi.RSSI());
-  json += F(",\"ip\":\"");
-  json += (WiFi.status() == WL_CONNECTED) ? WiFi.localIP().toString() : WiFi.softAPIP().toString();
-  json += F("\",\"hostname\":\"");
-  json += webpage_json_escape(WiFi.getHostname());
-  json += F("\",\"wifi_ssid\":\"");
+    json += String((unsigned long)supply_rail_mv());
+    json += F(",\"free_heap\":");
+    json += String((unsigned long)ESP.getFreeHeap());
+    json += F(",\"gyro\":");
+    json += gyro_started ? "true" : "false";
+    json += F(",\"rssi\":");
+    json += String(WiFi.RSSI());
+    json += F(",\"ip\":\"");
+    json += (WiFi.status() == WL_CONNECTED) ? WiFi.localIP().toString() : WiFi.softAPIP().toString();
+    json += F("\",\"hostname\":\"");
+    json += webpage_json_escape(WiFi.getHostname());
+    json += F("\",\"wifi_ssid\":\"");
   //? The network the board is aiming at, not necessarily the one it is on: in
   //* NET_CONNECTING those differ, and that is exactly the state worth seeing.
-  json += webpage_json_escape(wifi_saved_ssid().c_str());
-  json += F("\",\"wifi_slots\":[");
+    json += webpage_json_escape(wifi_saved_ssid().c_str());
+    json += F("\",\"wifi_slots\":[");
   //? Both saved SSIDs, never the passwords. The console uses this to show the
   //* primary/fallback state and to offer forget buttons without a second GET.
-  for (uint8_t slot = 0; slot < WIFI_CREDENTIAL_SLOTS; slot++)
-  {
-    if (slot)
-      json += ',';
-    json += F("{\"slot\":");
-    json += String((unsigned)slot);
-    json += F(",\"ssid\":\"");
-    json += webpage_json_escape(wifi_credential_ssid(slot).c_str());
-    json += F("\"}");
-  }
-  json += F("]}");
+    for (uint8_t slot = 0; slot < WIFI_CREDENTIAL_SLOTS; slot++)
+    {
+        if (slot)
+            json += ',';
+        json += F("{\"slot\":");
+        json += String((unsigned)slot);
+        json += F(",\"ssid\":\"");
+        json += webpage_json_escape(wifi_credential_ssid(slot).c_str());
+        json += F("\"}");
+    }
+    json += F("]}");
 }
 
 void webpage_handle_state()
 {
-  String json;
+    String json;
   //? Grown for the strip-size, step-flame, step-detection and USB blocks.
-  json.reserve(3000); // The state document outgrew the old 320-byte reserve long ago
-  webpage_state_json(json);
-  web_server.send(200, "application/json", json);
+    json.reserve(3000); // The state document outgrew the old 320-byte reserve long ago
+    webpage_state_json(json);
+    web_server.send(200, "application/json", json);
 }
 
 //* Both switches, polled by the page. Deliberately separate from /api/state:
@@ -723,136 +723,136 @@ void webpage_handle_state()
 //! after the finger came off, and no panel could ever show "held".
 void webpage_handle_buttons()
 {
-  const uint32_t now = millis();
+    const uint32_t now = millis();
 
-  String json;
+    String json;
   //? Two switches, plus the click and hold vocabulary the page explains around
   //* them.
-  json.reserve(1024);
+    json.reserve(1024);
   //* The mode the firmware is actually on. A click on the touch pad changes it on
   //! the device, and the page's mode buttons have to notice that without waiting
   //* for its own slower /api/state poll.
-  json += F("{\"mode\":");
-  json += String(mode);
+    json += F("{\"mode\":");
+    json += String(mode);
   //* The thresholds that are not per-switch, sent once instead of in each row.
   //? multi_gap_ms now only governs the running "recent presses" counter shown on
   //* each panel. The gesture window that actually drives behaviour is click_gap_ms:
   //? the wait after the last click before the firmware decides which gesture the
   //! user made. triple_count is gone - clicks are grouped by the caller now, so
   //* three presses are just three SHORT events (see check_button/check_boot_button).
-  json += F(",\"multi_gap_ms\":");
-  json += String(BUTTON_MULTI_PRESS_GAP_MS);
-  json += F(",\"click_gap_ms\":");
-  json += String(BUTTON_CLICK_GAP_MS);
-  json += F(",\"click_max_ms\":");
-  json += String(BUTTON_CLICK_MAX_MS);
+    json += F(",\"multi_gap_ms\":");
+    json += String(BUTTON_MULTI_PRESS_GAP_MS);
+    json += F(",\"click_gap_ms\":");
+    json += String(BUTTON_CLICK_GAP_MS);
+    json += F(",\"click_max_ms\":");
+    json += String(BUTTON_CLICK_MAX_MS);
   //* The switch list comes from the firmware's own table (services/readings.h),
   //? so adding a switch there adds a panel to the page with no change here.
-  json += F(",\"buttons\":[");
+    json += F(",\"buttons\":[");
 
-  for (uint8_t i = 0; i < BUTTON_INPUT_COUNT; i++)
-  {
-    const struct_buttonInput *b = button_inputs[i];
-    if (i > 0)
-      json += ',';
+    for (uint8_t i = 0; i < BUTTON_INPUT_COUNT; i++)
+    {
+        const struct_buttonInput *b = button_inputs[i];
+        if (i > 0)
+            json += ',';
 
-    json += F("{\"key\":\"");
-    json += webpage_json_escape(b->key);
-    json += F("\",\"label\":\"");
-    json += webpage_json_escape(b->label);
-    json += F("\",\"role\":\"");
-    json += webpage_json_escape(b->role);
-    json += F("\",\"action\":\"");
-    json += webpage_json_escape(b->action);
-    json += F("\",\"long_action\":\"");
-    json += webpage_json_escape(b->long_action);
-    json += F("\",\"pin\":");
-    json += String(b->pin);
-    json += F(",\"pressed\":");
-    json += b->pressed ? F("true") : F("false");
+        json += F("{\"key\":\"");
+        json += webpage_json_escape(b->key);
+        json += F("\",\"label\":\"");
+        json += webpage_json_escape(b->label);
+        json += F("\",\"role\":\"");
+        json += webpage_json_escape(b->role);
+        json += F("\",\"action\":\"");
+        json += webpage_json_escape(b->action);
+        json += F("\",\"long_action\":\"");
+        json += webpage_json_escape(b->long_action);
+        json += F("\",\"pin\":");
+        json += String(b->pin);
+        json += F(",\"pressed\":");
+        json += b->pressed ? F("true") : F("false");
     //* Elapsed time of the press in flight, so the page can count up without
     //* doing clock arithmetic against a device it is not synchronised with.
-    json += F(",\"held_now_ms\":");
-    json += String(b->pressed ? (unsigned)(now - b->press_start_ms) : 0);
-    json += F(",\"hold_ms\":");
-    json += String((unsigned)b->hold_ms);
-    json += F(",\"counter\":");
-    json += String((unsigned)b->counter);
-    json += F(",\"events\":");
-    json += String((unsigned)b->event_count);
-    json += F(",\"last_event\":");
-    json += String((unsigned)b->last_event);
+        json += F(",\"held_now_ms\":");
+        json += String(b->pressed ? (unsigned)(now - b->press_start_ms) : 0);
+        json += F(",\"hold_ms\":");
+        json += String((unsigned)b->hold_ms);
+        json += F(",\"counter\":");
+        json += String((unsigned)b->counter);
+        json += F(",\"events\":");
+        json += String((unsigned)b->event_count);
+        json += F(",\"last_event\":");
+        json += String((unsigned)b->last_event);
     //* Age rather than a timestamp: the two ends have no shared clock, and the
     //? page only ever asks "how long ago was that".
-    json += F(",\"last_event_age_ms\":");
+        json += F(",\"last_event_age_ms\":");
     //! Not a ternary over F("-1") and String: the two have no common type.
-    if (b->last_event_ms == 0)
-      json += F("-1");
-    else
-      json += String((unsigned)(now - b->last_event_ms));
+        if (b->last_event_ms == 0)
+            json += F("-1");
+        else
+            json += String((unsigned)(now - b->last_event_ms));
     //* The thresholds in force, so a panel explains the behaviour with the
     //? same numbers check_button() applies rather than a copy of them. A zero
     //* means this switch does not act at that threshold at all.
-    json += F(",\"long_press_ms\":");
-    json += String(b->long_press_ms);
-    json += F(",\"action_hold_ms\":");
-    json += String(b->action_hold_ms);
-    json += F(",\"monitor_timeout_ms\":");
-    json += String(b->monitor_timeout_ms);
-    json += F("}");
-  }
+        json += F(",\"long_press_ms\":");
+        json += String(b->long_press_ms);
+        json += F(",\"action_hold_ms\":");
+        json += String(b->action_hold_ms);
+        json += F(",\"monitor_timeout_ms\":");
+        json += String(b->monitor_timeout_ms);
+        json += F("}");
+    }
 
-  json += F("]}\n");
+    json += F("]}\n");
 
   //? Same reasoning as /api/state: this answer is only ever fresh for an
   //? instant, and a cached one would show a press that is long over.
-  web_server.sendHeader(F("Cache-Control"), F("no-store"));
-  web_server.send(200, "application/json", json);
+    web_server.sendHeader(F("Cache-Control"), F("no-store"));
+    web_server.send(200, "application/json", json);
 }
 
 void webpage_handle_modes()
 {
-  String json;
-  json.reserve(192);
-  json += '[';
-  for (uint8_t i = 0; i < led_mode_count(); i++)
-  {
-    const struct_ledMode *entry = led_mode_at(i);
-    if (i > 0)
-      json += ',';
-    json += F("{\"id\":");
-    json += String(entry->id);
-    json += F(",\"key\":\"");
-    json += webpage_json_escape(entry->key);
-    json += F("\",\"label\":\"");
-    json += webpage_json_escape(entry->label);
-    json += F("\"}");
-  }
-  json += F("]\n");
+    String json;
+    json.reserve(192);
+    json += '[';
+    for (uint8_t i = 0; i < led_mode_count(); i++)
+    {
+        const struct_ledMode *entry = led_mode_at(i);
+        if (i > 0)
+            json += ',';
+        json += F("{\"id\":");
+        json += String(entry->id);
+        json += F(",\"key\":\"");
+        json += webpage_json_escape(entry->key);
+        json += F("\",\"label\":\"");
+        json += webpage_json_escape(entry->label);
+        json += F("\"}");
+    }
+    json += F("]\n");
 
-  web_server.send(200, "application/json", json);
+    web_server.send(200, "application/json", json);
 }
 
 void webpage_handle_set_mode()
 {
-  const struct_ledMode *entry = nullptr;
+    const struct_ledMode *entry = nullptr;
 
-  if (web_server.hasArg("key"))
-    entry = find_led_mode_by_key(web_server.arg("key").c_str());
-  else if (web_server.hasArg("mode"))
-    entry = find_led_mode((uint8_t)web_server.arg("mode").toInt());
+    if (web_server.hasArg("key"))
+        entry = find_led_mode_by_key(web_server.arg("key").c_str());
+    else if (web_server.hasArg("mode"))
+        entry = find_led_mode((uint8_t)web_server.arg("mode").toInt());
 
-  if (entry == nullptr)
-  {
-    web_server.send(400, "application/json", "{\"ok\":false,\"error\":\"unknown mode\"}\n");
-    return;
-  }
+    if (entry == nullptr)
+    {
+        web_server.send(400, "application/json", "{\"ok\":false,\"error\":\"unknown mode\"}\n");
+        return;
+    }
 
-  mode = entry->id;
-  webpage_config_save();
+    mode = entry->id;
+    webpage_config_save();
 
-  Serial.printf("[WEB] Mode -> %u (%s)\n", entry->id, entry->key);
-  webpage_handle_state(); // Reply with the resulting state
+    Serial.printf("[WEB] Mode -> %u (%s)\n", entry->id, entry->key);
+    webpage_handle_state(); // Reply with the resulting state
 }
 
 //* Apply one /api/config field, exactly as the HTTP handler always has.
@@ -865,371 +865,371 @@ void webpage_handle_set_mode()
 //* this scope; the body below never sends a response.
 bool webpage_config_apply_arg(const char *name, const String &value)
 {
-  struct single_arg_request
-  {
-    const char *name;
-    const String &value;
-    bool hasArg(const char *key) const { return strcmp(name, key) == 0; }
-    String arg(const char *) const { return value; }
-  } web_server{name, value};
-
-  bool changed = false;
-
-  if (web_server.hasArg("red"))
-  {
-    palette.red = (uint8_t)constrain(web_server.arg("red").toInt(), 0, 255);
-    changed = true;
-  }
-  if (web_server.hasArg("green"))
-  {
-    palette.green = (uint8_t)constrain(web_server.arg("green").toInt(), 0, 255);
-    changed = true;
-  }
-  if (web_server.hasArg("blue"))
-  {
-    palette.blue = (uint8_t)constrain(web_server.arg("blue").toInt(), 0, 255);
-    changed = true;
-  }
-  if (web_server.hasArg("brightness"))
-  {
-    led_strip.brightness = (uint8_t)constrain(web_server.arg("brightness").toInt(), 0, 255);
-    changed = true;
-  }
-  if (web_server.hasArg("mode"))
-  {
-    const struct_ledMode *entry = find_led_mode((uint8_t)web_server.arg("mode").toInt());
-    if (entry != nullptr)
+    struct single_arg_request
     {
-      mode = entry->id;
-      changed = true;
+        const char *name;
+        const String &value;
+        bool hasArg(const char *key) const { return strcmp(name, key) == 0; }
+        String arg(const char *) const { return value; }
+    } web_server{name, value};
+
+    bool changed = false;
+
+    if (web_server.hasArg("red"))
+    {
+        palette.red = (uint8_t)constrain(web_server.arg("red").toInt(), 0, 255);
+        changed = true;
     }
-  }
+    if (web_server.hasArg("green"))
+    {
+        palette.green = (uint8_t)constrain(web_server.arg("green").toInt(), 0, 255);
+        changed = true;
+    }
+    if (web_server.hasArg("blue"))
+    {
+        palette.blue = (uint8_t)constrain(web_server.arg("blue").toInt(), 0, 255);
+        changed = true;
+    }
+    if (web_server.hasArg("brightness"))
+    {
+        led_strip.brightness = (uint8_t)constrain(web_server.arg("brightness").toInt(), 0, 255);
+        changed = true;
+    }
+    if (web_server.hasArg("mode"))
+    {
+        const struct_ledMode *entry = find_led_mode((uint8_t)web_server.arg("mode").toInt());
+        if (entry != nullptr)
+        {
+            mode = entry->id;
+            changed = true;
+        }
+    }
 
   //* Pulse whip tunables. Ranges are applied here so a hand-crafted request
   //* cannot push a divisor to zero; whip_sanitize() is the backstop.
-  if (web_server.hasArg("whip_speed"))
-  {
-    float speed = web_server.arg("whip_speed").toFloat();
-    if (speed < WHIP_SPEED_MIN)
-      speed = WHIP_SPEED_MIN;
-    if (speed > WHIP_SPEED_MAX)
-      speed = WHIP_SPEED_MAX;
-    whip.speed = speed;
-    changed = true;
-  }
-  if (web_server.hasArg("whip_length"))
-  {
-    int length = web_server.arg("whip_length").toInt();
-    if (length < WHIP_LENGTH_MIN)
-      length = WHIP_LENGTH_MIN;
-    if (length > NUM_LEDS)
-      length = NUM_LEDS;
-    whip.length = (uint8_t)length;
-    changed = true;
-  }
-  if (web_server.hasArg("whip_period"))
-  {
-    int period = web_server.arg("whip_period").toInt();
-    if (period < WHIP_PERIOD_MIN)
-      period = WHIP_PERIOD_MIN;
-    if (period > WHIP_PERIOD_MAX)
-      period = WHIP_PERIOD_MAX;
-    whip.period = (uint16_t)period;
-    changed = true;
-  }
-  if (web_server.hasArg("whip_peak"))
-  {
-    int peak = web_server.arg("whip_peak").toInt();
-    if (peak < 0)
-      peak = 0;
-    if (peak > 255)
-      peak = 255;
-    whip.peak = (uint8_t)peak;
-    changed = true;
-  }
-  if (web_server.hasArg("whip_offset"))
-  {
-    int offset = web_server.arg("whip_offset").toInt();
-    if (offset < 0)
-      offset = 0;
-    if (offset > 255)
-      offset = 255;
-    whip.offset = (uint8_t)offset;
-    changed = true;
-  }
+    if (web_server.hasArg("whip_speed"))
+    {
+        float speed = web_server.arg("whip_speed").toFloat();
+        if (speed < WHIP_SPEED_MIN)
+            speed = WHIP_SPEED_MIN;
+        if (speed > WHIP_SPEED_MAX)
+            speed = WHIP_SPEED_MAX;
+        whip.speed = speed;
+        changed = true;
+    }
+    if (web_server.hasArg("whip_length"))
+    {
+        int length = web_server.arg("whip_length").toInt();
+        if (length < WHIP_LENGTH_MIN)
+            length = WHIP_LENGTH_MIN;
+        if (length > NUM_LEDS)
+            length = NUM_LEDS;
+        whip.length = (uint8_t)length;
+        changed = true;
+    }
+    if (web_server.hasArg("whip_period"))
+    {
+        int period = web_server.arg("whip_period").toInt();
+        if (period < WHIP_PERIOD_MIN)
+            period = WHIP_PERIOD_MIN;
+        if (period > WHIP_PERIOD_MAX)
+            period = WHIP_PERIOD_MAX;
+        whip.period = (uint16_t)period;
+        changed = true;
+    }
+    if (web_server.hasArg("whip_peak"))
+    {
+        int peak = web_server.arg("whip_peak").toInt();
+        if (peak < 0)
+            peak = 0;
+        if (peak > 255)
+            peak = 255;
+        whip.peak = (uint8_t)peak;
+        changed = true;
+    }
+    if (web_server.hasArg("whip_offset"))
+    {
+        int offset = web_server.arg("whip_offset").toInt();
+        if (offset < 0)
+            offset = 0;
+        if (offset > 255)
+            offset = 255;
+        whip.offset = (uint8_t)offset;
+        changed = true;
+    }
 
   //* Rainbow flow tunables. Same contract as the whip block above: clamp the
   //* request here, then let rainbow_sanitize() below be the backstop.
-  if (web_server.hasArg("rainbow_speed"))
-  {
-    float speed = web_server.arg("rainbow_speed").toFloat();
-    if (speed < RAINBOW_SPEED_MIN)
-      speed = RAINBOW_SPEED_MIN;
-    if (speed > RAINBOW_SPEED_MAX)
-      speed = RAINBOW_SPEED_MAX;
-    rainbow.speed = speed;
-    changed = true;
-  }
-  if (web_server.hasArg("rainbow_min_ms"))
-  {
-    int min_ms = web_server.arg("rainbow_min_ms").toInt();
-    if (min_ms < RAINBOW_GAP_MIN_MS)
-      min_ms = RAINBOW_GAP_MIN_MS;
-    if (min_ms > RAINBOW_GAP_MAX_MS)
-      min_ms = RAINBOW_GAP_MAX_MS;
-    rainbow.min_ms = (uint16_t)min_ms;
-    changed = true;
-  }
-  if (web_server.hasArg("rainbow_max_ms"))
-  {
-    int max_ms = web_server.arg("rainbow_max_ms").toInt();
-    if (max_ms < RAINBOW_GAP_MIN_MS)
-      max_ms = RAINBOW_GAP_MIN_MS;
-    if (max_ms > RAINBOW_GAP_MAX_MS)
-      max_ms = RAINBOW_GAP_MAX_MS;
-    rainbow.max_ms = (uint16_t)max_ms;
-    changed = true;
-  }
-  if (web_server.hasArg("rainbow_level"))
-  {
-    rainbow.level = (uint8_t)constrain(web_server.arg("rainbow_level").toInt(), 0, 255);
-    changed = true;
-  }
+    if (web_server.hasArg("rainbow_speed"))
+    {
+        float speed = web_server.arg("rainbow_speed").toFloat();
+        if (speed < RAINBOW_SPEED_MIN)
+            speed = RAINBOW_SPEED_MIN;
+        if (speed > RAINBOW_SPEED_MAX)
+            speed = RAINBOW_SPEED_MAX;
+        rainbow.speed = speed;
+        changed = true;
+    }
+    if (web_server.hasArg("rainbow_min_ms"))
+    {
+        int min_ms = web_server.arg("rainbow_min_ms").toInt();
+        if (min_ms < RAINBOW_GAP_MIN_MS)
+            min_ms = RAINBOW_GAP_MIN_MS;
+        if (min_ms > RAINBOW_GAP_MAX_MS)
+            min_ms = RAINBOW_GAP_MAX_MS;
+        rainbow.min_ms = (uint16_t)min_ms;
+        changed = true;
+    }
+    if (web_server.hasArg("rainbow_max_ms"))
+    {
+        int max_ms = web_server.arg("rainbow_max_ms").toInt();
+        if (max_ms < RAINBOW_GAP_MIN_MS)
+            max_ms = RAINBOW_GAP_MIN_MS;
+        if (max_ms > RAINBOW_GAP_MAX_MS)
+            max_ms = RAINBOW_GAP_MAX_MS;
+        rainbow.max_ms = (uint16_t)max_ms;
+        changed = true;
+    }
+    if (web_server.hasArg("rainbow_level"))
+    {
+        rainbow.level = (uint8_t)constrain(web_server.arg("rainbow_level").toInt(), 0, 255);
+        changed = true;
+    }
 
   //* Power budget, 0.6. Clamped to the bench range; the guard and safe mode are
   //? separate layers and are not writable from here.
-  if (web_server.hasArg("budget"))
-  {
-    power_budget_ma = (uint16_t)constrain(web_server.arg("budget").toInt(),
-                                          POWER_BUDGET_MIN_MA, POWER_BUDGET_MAX_MA);
-    changed = true;
-  }
+    if (web_server.hasArg("budget"))
+    {
+        power_budget_ma = (uint16_t)constrain(web_server.arg("budget").toInt(),
+                                              POWER_BUDGET_MIN_MA, POWER_BUDGET_MAX_MA);
+        changed = true;
+    }
 
   //* Strip size. Bounded by the buffer the driver allocated, not by anything
   //* the request says: NUM_LEDS pixels exist and no more.
-  if (web_server.hasArg("leds"))
-  {
-    int leds = web_server.arg("leds").toInt();
-    if (leds < STRIP_LEDS_MIN)
-      leds = STRIP_LEDS_MIN;
-    if (leds > NUM_LEDS)
-      leds = NUM_LEDS;
-    strip_settings.active_leds = (uint16_t)leds;
-    changed = true;
-  }
+    if (web_server.hasArg("leds"))
+    {
+        int leds = web_server.arg("leds").toInt();
+        if (leds < STRIP_LEDS_MIN)
+            leds = STRIP_LEDS_MIN;
+        if (leds > NUM_LEDS)
+            leds = NUM_LEDS;
+        strip_settings.active_leds = (uint16_t)leds;
+        changed = true;
+    }
 
   //* Step flame tunables. Same contract as the whip and rainbow blocks: clamp
   //* the request here, then let flame_sanitize() below be the backstop.
-  if (web_server.hasArg("flame_decay"))
-  {
-    float decay = web_server.arg("flame_decay").toFloat();
-    if (decay < FLAME_DECAY_MIN)
-      decay = FLAME_DECAY_MIN;
-    if (decay > FLAME_DECAY_MAX)
-      decay = FLAME_DECAY_MAX;
-    flame.decay = decay;
-    changed = true;
-  }
-  if (web_server.hasArg("flame_spatial"))
-  {
-    float spatial = web_server.arg("flame_spatial").toFloat();
-    if (spatial < FLAME_SPATIAL_MIN)
-      spatial = FLAME_SPATIAL_MIN;
-    if (spatial > FLAME_SPATIAL_MAX)
-      spatial = FLAME_SPATIAL_MAX;
-    flame.spatial = spatial;
-    changed = true;
-  }
-  if (web_server.hasArg("flame_power_slope"))
-  {
-    float slope = web_server.arg("flame_power_slope").toFloat();
-    if (slope < 0.0f)
-      slope = 0.0f;
-    if (slope > FLAME_POWER_SLOPE_MAX)
-      slope = FLAME_POWER_SLOPE_MAX;
-    flame.power_slope = slope;
-    changed = true;
-  }
-  if (web_server.hasArg("flame_power_max"))
-  {
-    int max_power = web_server.arg("flame_power_max").toInt();
-    if (max_power < 0)
-      max_power = 0;
-    if (max_power > 255)
-      max_power = 255;
-    flame.power_max = (uint8_t)max_power;
-    changed = true;
-  }
-  if (web_server.hasArg("flame_power_idle"))
-  {
-    int idle = web_server.arg("flame_power_idle").toInt();
-    if (idle < 0)
-      idle = 0;
-    if (idle > 255)
-      idle = 255;
-    flame.power_idle = (uint8_t)idle;
-    changed = true;
-  }
+    if (web_server.hasArg("flame_decay"))
+    {
+        float decay = web_server.arg("flame_decay").toFloat();
+        if (decay < FLAME_DECAY_MIN)
+            decay = FLAME_DECAY_MIN;
+        if (decay > FLAME_DECAY_MAX)
+            decay = FLAME_DECAY_MAX;
+        flame.decay = decay;
+        changed = true;
+    }
+    if (web_server.hasArg("flame_spatial"))
+    {
+        float spatial = web_server.arg("flame_spatial").toFloat();
+        if (spatial < FLAME_SPATIAL_MIN)
+            spatial = FLAME_SPATIAL_MIN;
+        if (spatial > FLAME_SPATIAL_MAX)
+            spatial = FLAME_SPATIAL_MAX;
+        flame.spatial = spatial;
+        changed = true;
+    }
+    if (web_server.hasArg("flame_power_slope"))
+    {
+        float slope = web_server.arg("flame_power_slope").toFloat();
+        if (slope < 0.0f)
+            slope = 0.0f;
+        if (slope > FLAME_POWER_SLOPE_MAX)
+            slope = FLAME_POWER_SLOPE_MAX;
+        flame.power_slope = slope;
+        changed = true;
+    }
+    if (web_server.hasArg("flame_power_max"))
+    {
+        int max_power = web_server.arg("flame_power_max").toInt();
+        if (max_power < 0)
+            max_power = 0;
+        if (max_power > 255)
+            max_power = 255;
+        flame.power_max = (uint8_t)max_power;
+        changed = true;
+    }
+    if (web_server.hasArg("flame_power_idle"))
+    {
+        int idle = web_server.arg("flame_power_idle").toInt();
+        if (idle < 0)
+            idle = 0;
+        if (idle > 255)
+            idle = 255;
+        flame.power_idle = (uint8_t)idle;
+        changed = true;
+    }
 
   //* Gyro fade tunables, 0.6. Per-field ranges only; fade_sanitize() below is
   //* the relational backstop.
-  if (web_server.hasArg("fade_decay"))
-  {
-    float decay = web_server.arg("fade_decay").toFloat();
-    if (decay < 0.50f)
-      decay = 0.50f;
-    if (decay > 0.995f)
-      decay = 0.995f;
-    fade.decay = decay;
-    changed = true;
-  }
-  if (web_server.hasArg("fade_trigger"))
-  {
-    float trigger = web_server.arg("fade_trigger").toFloat();
-    if (trigger < 0.02f)
-      trigger = 0.02f;
-    if (trigger > 2.00f)
-      trigger = 2.00f;
-    fade.trigger = trigger;
-    changed = true;
-  }
-  if (web_server.hasArg("fade_length_gain"))
-  {
-    fade.length_gain = constrain(web_server.arg("fade_length_gain").toFloat(), 0.0f, 40.0f);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_length_z_gain"))
-  {
-    fade.length_z_gain = constrain(web_server.arg("fade_length_z_gain").toFloat(), 0.0f, 40.0f);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_length_base"))
-  {
-    fade.length_base = constrain(web_server.arg("fade_length_base").toFloat(), 0.0f, 40.0f);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_power_gain"))
-  {
-    fade.power_gain = constrain(web_server.arg("fade_power_gain").toFloat(), 0.0f, 10.0f);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_power_base"))
-  {
-    fade.power_base = constrain(web_server.arg("fade_power_base").toFloat(), 0.0f, 50.0f);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_color_gain"))
-  {
-    fade.color_gain = (uint8_t)constrain(web_server.arg("fade_color_gain").toInt(), 1, 20);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_idle_length"))
-  {
-    fade.idle_length = (uint8_t)constrain(web_server.arg("fade_idle_length").toInt(), 0, NUM_LEDS);
-    changed = true;
-  }
-  if (web_server.hasArg("fade_idle_power"))
-  {
-    fade.idle_power = (uint8_t)constrain(web_server.arg("fade_idle_power").toInt(), 0, 255);
-    changed = true;
-  }
+    if (web_server.hasArg("fade_decay"))
+    {
+        float decay = web_server.arg("fade_decay").toFloat();
+        if (decay < 0.50f)
+            decay = 0.50f;
+        if (decay > 0.995f)
+            decay = 0.995f;
+        fade.decay = decay;
+        changed = true;
+    }
+    if (web_server.hasArg("fade_trigger"))
+    {
+        float trigger = web_server.arg("fade_trigger").toFloat();
+        if (trigger < 0.02f)
+            trigger = 0.02f;
+        if (trigger > 2.00f)
+            trigger = 2.00f;
+        fade.trigger = trigger;
+        changed = true;
+    }
+    if (web_server.hasArg("fade_length_gain"))
+    {
+        fade.length_gain = constrain(web_server.arg("fade_length_gain").toFloat(), 0.0f, 40.0f);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_length_z_gain"))
+    {
+        fade.length_z_gain = constrain(web_server.arg("fade_length_z_gain").toFloat(), 0.0f, 40.0f);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_length_base"))
+    {
+        fade.length_base = constrain(web_server.arg("fade_length_base").toFloat(), 0.0f, 40.0f);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_power_gain"))
+    {
+        fade.power_gain = constrain(web_server.arg("fade_power_gain").toFloat(), 0.0f, 10.0f);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_power_base"))
+    {
+        fade.power_base = constrain(web_server.arg("fade_power_base").toFloat(), 0.0f, 50.0f);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_color_gain"))
+    {
+        fade.color_gain = (uint8_t)constrain(web_server.arg("fade_color_gain").toInt(), 1, 20);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_idle_length"))
+    {
+        fade.idle_length = (uint8_t)constrain(web_server.arg("fade_idle_length").toInt(), 0, NUM_LEDS);
+        changed = true;
+    }
+    if (web_server.hasArg("fade_idle_power"))
+    {
+        fade.idle_power = (uint8_t)constrain(web_server.arg("fade_idle_power").toInt(), 0, 255);
+        changed = true;
+    }
 
   //* Impact detection tunables. Only the per-field ranges are clamped here;
   //* the relations between the fields (release vs threshold, min vs max) are
   //! step_sanitize()'s job, because a single request can move one side of a
   //! pair and a slider that has hit its ceiling must not be able to invert it.
-  if (web_server.hasArg("step_baseline_tau_ms"))
-  {
-    int tau = web_server.arg("step_baseline_tau_ms").toInt();
-    if (tau < STEP_BASELINE_TAU_MIN_MS)
-      tau = STEP_BASELINE_TAU_MIN_MS;
-    if (tau > STEP_BASELINE_TAU_MAX_MS)
-      tau = STEP_BASELINE_TAU_MAX_MS;
-    step.baseline_tau_ms = (uint16_t)tau;
-    changed = true;
-  }
-  if (web_server.hasArg("step_threshold"))
-  {
-    float threshold = web_server.arg("step_threshold").toFloat();
-    if (threshold < STEP_THRESHOLD_MIN)
-      threshold = STEP_THRESHOLD_MIN;
-    if (threshold > STEP_THRESHOLD_MAX)
-      threshold = STEP_THRESHOLD_MAX;
-    step.threshold = threshold;
-    changed = true;
-  }
-  if (web_server.hasArg("step_release"))
-  {
-    float release = web_server.arg("step_release").toFloat();
-    if (release < STEP_RELEASE_MIN)
-      release = STEP_RELEASE_MIN;
+    if (web_server.hasArg("step_baseline_tau_ms"))
+    {
+        int tau = web_server.arg("step_baseline_tau_ms").toInt();
+        if (tau < STEP_BASELINE_TAU_MIN_MS)
+            tau = STEP_BASELINE_TAU_MIN_MS;
+        if (tau > STEP_BASELINE_TAU_MAX_MS)
+            tau = STEP_BASELINE_TAU_MAX_MS;
+        step.baseline_tau_ms = (uint16_t)tau;
+        changed = true;
+    }
+    if (web_server.hasArg("step_threshold"))
+    {
+        float threshold = web_server.arg("step_threshold").toFloat();
+        if (threshold < STEP_THRESHOLD_MIN)
+            threshold = STEP_THRESHOLD_MIN;
+        if (threshold > STEP_THRESHOLD_MAX)
+            threshold = STEP_THRESHOLD_MAX;
+        step.threshold = threshold;
+        changed = true;
+    }
+    if (web_server.hasArg("step_release"))
+    {
+        float release = web_server.arg("step_release").toFloat();
+        if (release < STEP_RELEASE_MIN)
+            release = STEP_RELEASE_MIN;
     //! No ceiling on this side: `threshold` is the ceiling, and it is
     //! applied as a relation by step_sanitize() below.
-    step.release = release;
-    changed = true;
-  }
-  if (web_server.hasArg("step_min_gap_ms"))
-  {
-    int gap = web_server.arg("step_min_gap_ms").toInt();
-    if (gap < STEP_GAP_MIN_MS)
-      gap = STEP_GAP_MIN_MS;
-    if (gap > STEP_GAP_MAX_MS)
-      gap = STEP_GAP_MAX_MS;
-    step.min_gap_ms = (uint16_t)gap;
-    changed = true;
-  }
-  if (web_server.hasArg("step_jerk_min"))
-  {
-    float jerk = web_server.arg("step_jerk_min").toFloat();
-    if (jerk < STEP_JERK_MIN)
-      jerk = STEP_JERK_MIN;
-    if (jerk > STEP_JERK_MAX)
-      jerk = STEP_JERK_MAX;
-    step.jerk_min = jerk;
-    changed = true;
-  }
-  if (web_server.hasArg("step_impact_min"))
-  {
-    float impact = web_server.arg("step_impact_min").toFloat();
-    if (impact < STEP_IMPACT_MIN)
-      impact = STEP_IMPACT_MIN;
-    if (impact > STEP_IMPACT_MAX)
-      impact = STEP_IMPACT_MAX;
-    step.impact_min = impact;
-    changed = true;
-  }
-  if (web_server.hasArg("step_impact_max"))
-  {
-    float impact = web_server.arg("step_impact_max").toFloat();
-    if (impact < STEP_IMPACT_MIN)
-      impact = STEP_IMPACT_MIN;
-    if (impact > STEP_IMPACT_MAX)
-      impact = STEP_IMPACT_MAX;
-    step.impact_max = impact;
-    changed = true;
-  }
-  if (web_server.hasArg("step_magnitude_min"))
-  {
-    int magnitude = web_server.arg("step_magnitude_min").toInt();
-    if (magnitude < 0)
-      magnitude = 0;
-    if (magnitude > 254)
-      magnitude = 254;
-    step.magnitude_min = (uint8_t)magnitude;
-    changed = true;
-  }
-  if (web_server.hasArg("step_magnitude_max"))
-  {
-    int magnitude = web_server.arg("step_magnitude_max").toInt();
-    if (magnitude < 1)
-      magnitude = 1;
-    if (magnitude > 255)
-      magnitude = 255;
-    step.magnitude_max = (uint8_t)magnitude;
-    changed = true;
-  }
+        step.release = release;
+        changed = true;
+    }
+    if (web_server.hasArg("step_min_gap_ms"))
+    {
+        int gap = web_server.arg("step_min_gap_ms").toInt();
+        if (gap < STEP_GAP_MIN_MS)
+            gap = STEP_GAP_MIN_MS;
+        if (gap > STEP_GAP_MAX_MS)
+            gap = STEP_GAP_MAX_MS;
+        step.min_gap_ms = (uint16_t)gap;
+        changed = true;
+    }
+    if (web_server.hasArg("step_jerk_min"))
+    {
+        float jerk = web_server.arg("step_jerk_min").toFloat();
+        if (jerk < STEP_JERK_MIN)
+            jerk = STEP_JERK_MIN;
+        if (jerk > STEP_JERK_MAX)
+            jerk = STEP_JERK_MAX;
+        step.jerk_min = jerk;
+        changed = true;
+    }
+    if (web_server.hasArg("step_impact_min"))
+    {
+        float impact = web_server.arg("step_impact_min").toFloat();
+        if (impact < STEP_IMPACT_MIN)
+            impact = STEP_IMPACT_MIN;
+        if (impact > STEP_IMPACT_MAX)
+            impact = STEP_IMPACT_MAX;
+        step.impact_min = impact;
+        changed = true;
+    }
+    if (web_server.hasArg("step_impact_max"))
+    {
+        float impact = web_server.arg("step_impact_max").toFloat();
+        if (impact < STEP_IMPACT_MIN)
+            impact = STEP_IMPACT_MIN;
+        if (impact > STEP_IMPACT_MAX)
+            impact = STEP_IMPACT_MAX;
+        step.impact_max = impact;
+        changed = true;
+    }
+    if (web_server.hasArg("step_magnitude_min"))
+    {
+        int magnitude = web_server.arg("step_magnitude_min").toInt();
+        if (magnitude < 0)
+            magnitude = 0;
+        if (magnitude > 254)
+            magnitude = 254;
+        step.magnitude_min = (uint8_t)magnitude;
+        changed = true;
+    }
+    if (web_server.hasArg("step_magnitude_max"))
+    {
+        int magnitude = web_server.arg("step_magnitude_max").toInt();
+        if (magnitude < 1)
+            magnitude = 1;
+        if (magnitude > 255)
+            magnitude = 255;
+        step.magnitude_max = (uint8_t)magnitude;
+        changed = true;
+    }
 
-  return changed;
+    return changed;
 }
 
 void webpage_handle_set_config()
@@ -1239,119 +1239,119 @@ void webpage_handle_set_config()
   //? run once after the whole batch, exactly as they did when this was a wall
   //! of hasArg() blocks: a request that moves both sides of a pair must be
   //* sanitised on the final values, not on each intermediate one.
-  bool changed = false;
-  for (int i = 0; i < web_server.args(); i++)
-    changed |= webpage_config_apply_arg(web_server.argName(i).c_str(), web_server.arg(i));
+    bool changed = false;
+    for (int i = 0; i < web_server.args(); i++)
+        changed |= webpage_config_apply_arg(web_server.argName(i).c_str(), web_server.arg(i));
 
-  if (!changed)
-  {
-    web_server.send(400, "application/json", "{\"ok\":false,\"error\":\"no recognised field\"}\n");
-    return;
-  }
+    if (!changed)
+    {
+        web_server.send(400, "application/json", "{\"ok\":false,\"error\":\"no recognised field\"}\n");
+        return;
+    }
 
   //! strip_sanitize() first: it owns `active_leds` and pulls every length
   //! measured in LEDs down with it, so the two sanitisers after it see the
   //! strip the values will actually be rendered on. step_sanitize() follows so
   //! that the flame description below is computed on a legal magnitude scale.
-  strip_sanitize();
-  step_sanitize();
-  whip_sanitize();
-  flame_sanitize();
-  rainbow_sanitize();
-  fade_sanitize();
-  webpage_config_save();
+    strip_sanitize();
+    step_sanitize();
+    whip_sanitize();
+    flame_sanitize();
+    rainbow_sanitize();
+    fade_sanitize();
+    webpage_config_save();
 
   //? Proof on serial that the write actually landed, rather than having to
   //? infer it from the strip.
-  Serial.printf("[WEB] Config -> mode=%d palette=%u,%u,%u bright=%u\n",
-                mode, palette.red, palette.green, palette.blue, led_strip.brightness);
-  Serial.printf("[WEB] Strip -> %u of %d LEDs\n", strip_leds(), NUM_LEDS);
-  Serial.printf("[WEB] Impact -> tau=%ums threshold=%.2f release=%.2f jerk=%.1f gap=%ums impact=%.2f..%.2f mag=%u..%u\n",
-                step.baseline_tau_ms, step.threshold, step.release,
-                step.jerk_min, step.min_gap_ms, step.impact_min, step.impact_max,
-                step.magnitude_min, step.magnitude_max);
-  Serial.printf("[WEB] Flame -> decay=%.3f spatial=%.2f power=%.1f max=%u idle=%u (drawn in the palette)\n",
-                flame.decay, flame.spatial, flame.power_slope, flame.power_max,
-                flame.power_idle);
-  Serial.printf("[WEB] Rainbow -> speed=%.2f gap=%u..ums\n",
-                rainbow.speed, rainbow.min_ms, rainbow.max_ms);
-  Serial.printf("[WEB] Rainbow -> level=%u/255\n", rainbow.level);
-  Serial.printf("[WEB] Fade -> decay=%.3f trigger=%.2f len=%.0f/%.0f/%.0f color=%u idle=%u/%u\n",
-                fade.decay, fade.trigger, fade.length_gain, fade.length_z_gain,
-                fade.length_base, fade.color_gain, fade.idle_length, fade.idle_power);
-  Serial.printf("[WEB] Power -> budget=%u mA guard=%u/255 active=%u suggested=%u mA\n",
-                power_budget_ma, power_guard_scale, power_guard_active,
-                power_suggestion_ma());
+    Serial.printf("[WEB] Config -> mode=%d palette=%u,%u,%u bright=%u\n",
+                  mode, palette.red, palette.green, palette.blue, led_strip.brightness);
+    Serial.printf("[WEB] Strip -> %u of %d LEDs\n", strip_leds(), NUM_LEDS);
+    Serial.printf("[WEB] Impact -> tau=%ums threshold=%.2f release=%.2f jerk=%.1f gap=%ums impact=%.2f..%.2f mag=%u..%u\n",
+                  step.baseline_tau_ms, step.threshold, step.release,
+                  step.jerk_min, step.min_gap_ms, step.impact_min, step.impact_max,
+                  step.magnitude_min, step.magnitude_max);
+    Serial.printf("[WEB] Flame -> decay=%.3f spatial=%.2f power=%.1f max=%u idle=%u (drawn in the palette)\n",
+                  flame.decay, flame.spatial, flame.power_slope, flame.power_max,
+                  flame.power_idle);
+    Serial.printf("[WEB] Rainbow -> speed=%.2f gap=%u..ums\n",
+                  rainbow.speed, rainbow.min_ms, rainbow.max_ms);
+    Serial.printf("[WEB] Rainbow -> level=%u/255\n", rainbow.level);
+    Serial.printf("[WEB] Fade -> decay=%.3f trigger=%.2f len=%.0f/%.0f/%.0f color=%u idle=%u/%u\n",
+                  fade.decay, fade.trigger, fade.length_gain, fade.length_z_gain,
+                  fade.length_base, fade.color_gain, fade.idle_length, fade.idle_power);
+    Serial.printf("[WEB] Power -> budget=%u mA guard=%u/255 active=%u suggested=%u mA\n",
+                  power_budget_ma, power_guard_scale, power_guard_active,
+                  power_suggestion_ma());
 
-  webpage_handle_state();
+    webpage_handle_state();
 }
 
 //* ---------------------- LOGIN ----------------------
 
 void webpage_auth_clear()
 {
-  preferences.begin(WEBPAGE_AUTH_NAMESPACE, false);
-  preferences.remove(WEBPAGE_AUTH_USER_KEY);
-  preferences.remove(WEBPAGE_AUTH_PASS_KEY);
-  preferences.end();
+    preferences.begin(WEBPAGE_AUTH_NAMESPACE, false);
+    preferences.remove(WEBPAGE_AUTH_USER_KEY);
+    preferences.remove(WEBPAGE_AUTH_PASS_KEY);
+    preferences.end();
 
-  webpage_auth_user_value = "";
-  webpage_auth_password_value = "";
+    webpage_auth_user_value = "";
+    webpage_auth_password_value = "";
 }
 
 void webpage_auth_load()
 {
-  webpage_auth_user_value = "";
-  webpage_auth_password_value = "";
+    webpage_auth_user_value = "";
+    webpage_auth_password_value = "";
 
   //? A namespace that has never been written is not an error here: it is a board
   //* with no login, which is the state this ships in.
-  if (preferences.begin(WEBPAGE_AUTH_NAMESPACE, true))
-  {
-    webpage_auth_user_value = preferences.getString(WEBPAGE_AUTH_USER_KEY, "");
-    webpage_auth_password_value = preferences.getString(WEBPAGE_AUTH_PASS_KEY, "");
-    preferences.end();
-  }
+    if (preferences.begin(WEBPAGE_AUTH_NAMESPACE, true))
+    {
+        webpage_auth_user_value = preferences.getString(WEBPAGE_AUTH_USER_KEY, "");
+        webpage_auth_password_value = preferences.getString(WEBPAGE_AUTH_PASS_KEY, "");
+        preferences.end();
+    }
 
-  if (webpage_auth_enabled())
-    Serial.printf("[WEB] Login required (user '%s')\n", webpage_auth_user_value.c_str());
-  else
-    Serial.println("[WEB] No login set - the page answers anyone on this network");
+    if (webpage_auth_enabled())
+        Serial.printf("[WEB] Login required (user '%s')\n", webpage_auth_user_value.c_str());
+    else
+        Serial.println("[WEB] No login set - the page answers anyone on this network");
 }
 
 //* A stored password is the whole of "on". Nothing else arms the check, so a
 //* board that has never been given one behaves exactly as it did before.
 bool webpage_auth_enabled()
 {
-  return webpage_auth_password_value.length() > 0;
+    return webpage_auth_password_value.length() > 0;
 }
 
 void webpage_auth_store(const char *user, const char *password)
 {
-  String name = (user != nullptr) ? String(user) : String("");
-  const String pass = (password != nullptr) ? String(password) : String("");
-  name.trim();
+    String name = (user != nullptr) ? String(user) : String("");
+    const String pass = (password != nullptr) ? String(password) : String("");
+    name.trim();
 
-  if (pass.length() == 0)
-  {
+    if (pass.length() == 0)
+    {
     //* Off, and off means the keys are GONE rather than stored empty, which is
     //* what the recovery wipe does to them as well.
-    webpage_auth_clear();
-    Serial.println("[WEB] Login disabled - the page is open again");
-    return;
-  }
+        webpage_auth_clear();
+        Serial.println("[WEB] Login disabled - the page is open again");
+        return;
+    }
 
-  if (name.length() == 0)
-    name = F(WEBPAGE_AUTH_DEFAULT_USER);
+    if (name.length() == 0)
+        name = F(WEBPAGE_AUTH_DEFAULT_USER);
 
-  preferences.begin(WEBPAGE_AUTH_NAMESPACE, false);
-  preferences.putString(WEBPAGE_AUTH_USER_KEY, name);
-  preferences.putString(WEBPAGE_AUTH_PASS_KEY, pass);
-  preferences.end();
+    preferences.begin(WEBPAGE_AUTH_NAMESPACE, false);
+    preferences.putString(WEBPAGE_AUTH_USER_KEY, name);
+    preferences.putString(WEBPAGE_AUTH_PASS_KEY, pass);
+    preferences.end();
 
-  webpage_auth_user_value = name;
-  webpage_auth_password_value = pass;
-  Serial.printf("[WEB] Login enabled for user '%s'\n", name.c_str());
+    webpage_auth_user_value = name;
+    webpage_auth_password_value = pass;
+    Serial.printf("[WEB] Login enabled for user '%s'\n", name.c_str());
 }
 
 //* The check without a reply, for the one caller that runs while a request body is
@@ -1359,24 +1359,24 @@ void webpage_auth_store(const char *user, const char *password)
 //* without also trying to answer a client that is mid-transfer.
 bool webpage_auth_allows()
 {
-  if (!webpage_auth_enabled())
-    return true;
+    if (!webpage_auth_enabled())
+        return true;
 
-  return web_server.authenticate(webpage_auth_user_value.c_str(),
-                                 webpage_auth_password_value.c_str());
+    return web_server.authenticate(webpage_auth_user_value.c_str(),
+                                   webpage_auth_password_value.c_str());
 }
 
 bool webpage_auth_ok()
 {
-  if (webpage_auth_allows())
-    return true;
+    if (webpage_auth_allows())
+        return true;
 
   //! requestAuthentication() is what actually sends the 401 and the
   //? WWW-Authenticate header a browser turns into its login dialog.
   //! authenticate() only answers the question - without this the client would get
   //* an empty, perfectly successful reply and no reason to offer a password.
-  web_server.requestAuthentication(BASIC_AUTH, WEBPAGE_AUTH_REALM);
-  return false;
+    web_server.requestAuthentication(BASIC_AUTH, WEBPAGE_AUTH_REALM);
+    return false;
 }
 
 //* Wrap a handler so the whole route table is covered from one place. A handler
@@ -1384,42 +1384,42 @@ bool webpage_auth_ok()
 //* costs one line per route rather than a guard inside every handler body.
 WebServer::THandlerFunction webpage_auth_gate(WebServer::THandlerFunction handler)
 {
-  return [handler]()
-  {
-    if (webpage_auth_ok())
-      handler();
-  };
+    return [handler]()
+    {
+        if (webpage_auth_ok())
+            handler();
+    };
 }
 
 //* GET /api/auth: is a login in force, and for which name.
 void webpage_handle_auth_get()
 {
-  String json;
-  json.reserve(96);
-  json += F("{\"ok\":true,\"enabled\":");
-  json += webpage_auth_enabled() ? F("true") : F("false");
-  json += F(",\"user\":\"");
+    String json;
+    json.reserve(96);
+    json += F("{\"ok\":true,\"enabled\":");
+    json += webpage_auth_enabled() ? F("true") : F("false");
+    json += F(",\"user\":\"");
   //! The password never leaves the device, and the username only while a login is
   //? on: with the login off this document is readable by anyone who asks, and
   //* there is no name to report anyway.
-  json += webpage_json_escape(webpage_auth_enabled() ? webpage_auth_user_value.c_str() : "");
-  json += F("\"}\n");
-  web_server.send(200, "application/json", json);
+    json += webpage_json_escape(webpage_auth_enabled() ? webpage_auth_user_value.c_str() : "");
+    json += F("\"}\n");
+    web_server.send(200, "application/json", json);
 }
 
 //* POST /api/auth: user + pass. An empty pass turns the login off.
 void webpage_handle_auth_set()
 {
-  webpage_auth_store(web_server.arg("user").c_str(), web_server.arg("pass").c_str());
+    webpage_auth_store(web_server.arg("user").c_str(), web_server.arg("pass").c_str());
 
-  String json;
-  json.reserve(96);
-  json += F("{\"ok\":true,\"enabled\":");
-  json += webpage_auth_enabled() ? F("true") : F("false");
-  json += F(",\"user\":\"");
-  json += webpage_json_escape(webpage_auth_enabled() ? webpage_auth_user_value.c_str() : "");
-  json += F("\"}\n");
-  web_server.send(200, "application/json", json);
+    String json;
+    json.reserve(96);
+    json += F("{\"ok\":true,\"enabled\":");
+    json += webpage_auth_enabled() ? F("true") : F("false");
+    json += F(",\"user\":\"");
+    json += webpage_json_escape(webpage_auth_enabled() ? webpage_auth_user_value.c_str() : "");
+    json += F("\"}\n");
+    web_server.send(200, "application/json", json);
 }
 
 //* ---------------------- WIFI, FROM THE PAGE ----------------------
@@ -1433,11 +1433,11 @@ bool webpage_wifi_join_pending = false;
 
 void webpage_wifi_poll()
 {
-  if (!webpage_wifi_join_pending)
-    return;
+    if (!webpage_wifi_join_pending)
+        return;
 
-  webpage_wifi_join_pending = false;
-  wifi_join_begin(webpage_wifi_join_slot);
+    webpage_wifi_join_pending = false;
+    wifi_join_begin(webpage_wifi_join_slot);
 }
 
 //? The page's own view of the two saved networks. A document of its own rather
@@ -1453,93 +1453,93 @@ void webpage_wifi_poll()
 //* asked for ended.
 void webpage_handle_wifi_get()
 {
-  String json;
-  json.reserve(360);
-  json += F("{\"ok\":true,\"state\":\"");
-  json += wifi_state_name();
-  json += F("\",\"offline\":");
-  json += (net_state == NET_OFFLINE) ? F("true") : F("false");
-  json += F(",\"join_error\":\"");
-  json += webpage_json_escape(wifi_join_error.c_str());
-  json += F("\",\"slots\":[");
+    String json;
+    json.reserve(360);
+    json += F("{\"ok\":true,\"state\":\"");
+    json += wifi_state_name();
+    json += F("\",\"offline\":");
+    json += (net_state == NET_OFFLINE) ? F("true") : F("false");
+    json += F(",\"join_error\":\"");
+    json += webpage_json_escape(wifi_join_error.c_str());
+    json += F("\",\"slots\":[");
 
-  for (uint8_t slot = 0; slot < WIFI_CREDENTIAL_SLOTS; slot++)
-  {
-    if (slot != 0)
-      json += ',';
+    for (uint8_t slot = 0; slot < WIFI_CREDENTIAL_SLOTS; slot++)
+    {
+        if (slot != 0)
+            json += ',';
 
-    json += F("{\"slot\":");
-    json += String((unsigned)slot);
-    json += F(",\"saved\":");
-    json += wifi_credential_present(slot) ? F("true") : F("false");
-    json += F(",\"active\":");
-    json += (slot == wifi_credential_active()) ? F("true") : F("false");
-    json += F(",\"ssid\":\"");
-    json += webpage_json_escape(wifi_credential_ssid(slot).c_str());
-    json += F("\"}");
-  }
+        json += F("{\"slot\":");
+        json += String((unsigned)slot);
+        json += F(",\"saved\":");
+        json += wifi_credential_present(slot) ? F("true") : F("false");
+        json += F(",\"active\":");
+        json += (slot == wifi_credential_active()) ? F("true") : F("false");
+        json += F(",\"ssid\":\"");
+        json += webpage_json_escape(wifi_credential_ssid(slot).c_str());
+        json += F("\"}");
+    }
 
-  json += F("]}\n");
-  web_server.send(200, "application/json", json);
+    json += F("]}\n");
+    web_server.send(200, "application/json", json);
 }
 
 //* POST /api/wifi: ssid + pass into one slot. An empty ssid forgets the slot.
 void webpage_handle_wifi_set()
 {
-  const uint8_t slot = wifi_credential_clamp((uint8_t)web_server.arg("slot").toInt());
-  const String ssid = web_server.arg("ssid");
+    const uint8_t slot = wifi_credential_clamp((uint8_t)web_server.arg("slot").toInt());
+    const String ssid = web_server.arg("ssid");
 
   //? keep_password is how the page says "this field is empty because the stored
   //! password is never shown, not because the network is open". Without it, saving
   //* an otherwise unchanged network through the form would wipe its password.
-  const bool keep_password = web_server.hasArg("keep_password") && wifi_credential_present(slot);
+    const bool keep_password = web_server.hasArg("keep_password") && wifi_credential_present(slot);
 
-  String json;
-  json.reserve(200);
-  json += F("{\"ok\":true,\"slot\":");
-  json += String((unsigned)slot);
+    String json;
+    json.reserve(200);
+    json += F("{\"ok\":true,\"slot\":");
+    json += String((unsigned)slot);
 
-  if (ssid.length() == 0)
-  {
-    wifi_credential_clear(slot);
-    json += F(",\"saved\":false");
-  }
-  else
-  {
-    const String password = keep_password ? wifi_credential_password(slot) : web_server.arg("pass");
-    wifi_credential_store(slot, ssid.c_str(), password.c_str());
+    if (ssid.length() == 0)
+    {
+        wifi_credential_clear(slot);
+        json += F(",\"saved\":false");
+    }
+    else
+    {
+        const String password = keep_password ? wifi_credential_password(slot) : web_server.arg("pass");
+        wifi_credential_store(slot, ssid.c_str(), password.c_str());
 
     //* A network typed into this page is a provision, so the offline switch goes
     //? off with it - the same rule the config portal follows, and the reason a
     //* board parked offline can be brought back from here at all.
-    wifi_offline_store(false);
+        wifi_offline_store(false);
 
-    json += F(",\"saved\":true,\"ssid\":\"");
-    json += webpage_json_escape(ssid.c_str());
-    json += F("\"");
-  }
+        json += F(",\"saved\":true,\"ssid\":\"");
+        json += webpage_json_escape(ssid.c_str());
+        json += F("\"");
+    }
 
   //* Both slots empty leaves nothing to aim at, and wifi_loop() parks the radio
   //? the moment the current link drops. Reporting it here is the difference
   //* between a setting the user chose and a surprise they did not.
-  json += F(",\"has_credentials\":");
-  json += wifi_has_credentials() ? F("true") : F("false");
-  json += F("}\n");
+    json += F(",\"has_credentials\":");
+    json += wifi_has_credentials() ? F("true") : F("false");
+    json += F("}\n");
 
-  web_server.send(200, "application/json", json);
+    web_server.send(200, "application/json", json);
 
   //! Flushed before the radio can move: a join on a different network takes this
   //? page down with it, and a reply still sitting in the socket buffer would turn
   //* a request that worked into a network error in the browser.
-  web_server.client().flush();
+    web_server.client().flush();
 
   //* Deferred to webpage_wifi_poll() rather than started here: see the note over
   //* it, and the one over wifi_join_begin().
-  if (ssid.length() > 0)
-  {
-    webpage_wifi_join_slot = slot;
-    webpage_wifi_join_pending = true;
-  }
+    if (ssid.length() > 0)
+    {
+        webpage_wifi_join_slot = slot;
+        webpage_wifi_join_pending = true;
+    }
 }
 
 //* POST /api/wifi/scan: start one. A route of its own rather than a flag on the
@@ -1547,73 +1547,73 @@ void webpage_handle_wifi_set()
 //* GET while it runs.
 void webpage_handle_wifi_scan_start()
 {
-  const bool started = wifi_scan_start();
+    const bool started = wifi_scan_start();
 
-  String json;
-  json.reserve(80);
-  json += F("{\"ok\":true,\"scanning\":");
-  json += started ? F("true") : F("false");
-  json += F("}\n");
-  web_server.send(200, "application/json", json);
+    String json;
+    json.reserve(80);
+    json += F("{\"ok\":true,\"scanning\":");
+    json += started ? F("true") : F("false");
+    json += F("}\n");
+    web_server.send(200, "application/json", json);
 }
 
 //* GET /api/wifi/scan: how the scan is doing, and its results once there are any.
 void webpage_handle_wifi_scan()
 {
-  const int16_t status = wifi_scan_status();
+    const int16_t status = wifi_scan_status();
 
-  String json;
-  json.reserve(1100);
-  json += F("{\"ok\":true,\"scanning\":");
-  json += (status == WIFI_SCAN_RUNNING) ? F("true") : F("false");
-  json += F(",\"failed\":");
-  json += (status == WIFI_SCAN_FAILED) ? F("true") : F("false");
-  json += F(",\"networks\":[");
+    String json;
+    json.reserve(1100);
+    json += F("{\"ok\":true,\"scanning\":");
+    json += (status == WIFI_SCAN_RUNNING) ? F("true") : F("false");
+    json += F(",\"failed\":");
+    json += (status == WIFI_SCAN_FAILED) ? F("true") : F("false");
+    json += F(",\"networks\":[");
 
-  if (status > 0)
-  {
-    for (int16_t i = 0; i < status; i++)
+    if (status > 0)
     {
-      if (i != 0)
-        json += ',';
+        for (int16_t i = 0; i < status; i++)
+        {
+            if (i != 0)
+                json += ',';
 
-      const String found = WiFi.SSID(i);
-      const int8_t saved = wifi_credential_find(found.c_str());
+            const String found = WiFi.SSID(i);
+            const int8_t saved = wifi_credential_find(found.c_str());
 
-      json += F("{\"ssid\":\"");
-      json += webpage_json_escape(found.c_str());
-      json += F("\",\"rssi\":");
-      json += String(WiFi.RSSI(i));
-      json += F(",\"channel\":");
-      json += String(WiFi.channel(i));
-      json += F(",\"secure\":");
-      json += (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? F("false") : F("true");
-      json += F(",\"saved\":");
-      json += (saved >= 0) ? F("true") : F("false");
-      json += F("}");
-    }
+            json += F("{\"ssid\":\"");
+            json += webpage_json_escape(found.c_str());
+            json += F("\",\"rssi\":");
+            json += String(WiFi.RSSI(i));
+            json += F(",\"channel\":");
+            json += String(WiFi.channel(i));
+            json += F(",\"secure\":");
+            json += (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? F("false") : F("true");
+            json += F(",\"saved\":");
+            json += (saved >= 0) ? F("true") : F("false");
+            json += F("}");
+        }
 
     //* Released as soon as it has been read: this response IS the only copy of the
     //? result, and holding it would keep the driver's buffer alive until the next
     //* scan started.
-    wifi_scan_release();
-  }
+        wifi_scan_release();
+    }
 
-  json += F("]}\n");
-  web_server.send(200, "application/json", json);
+    json += F("]}\n");
+    web_server.send(200, "application/json", json);
 }
 
 void webpage_handle_not_found()
 {
-  if (web_server.uri().startsWith("/api/"))
-  {
-    web_server.send(404, "application/json", "{\"ok\":false,\"error\":\"no such endpoint\"}\n");
-    return;
-  }
+    if (web_server.uri().startsWith("/api/"))
+    {
+        web_server.send(404, "application/json", "{\"ok\":false,\"error\":\"no such endpoint\"}\n");
+        return;
+    }
 
   //* Anything else (including /favicon.ico) lands back on the config page.
-  web_server.sendHeader(F("Location"), "/", true);
-  web_server.send(302, "text/plain", "");
+    web_server.sendHeader(F("Location"), "/", true);
+    web_server.send(302, "text/plain", "");
 }
 
 //* ---------------------- EMBEDDED PAGE ----------------------
@@ -3301,8 +3301,8 @@ var refreshTimer = setInterval(refresh, 3000);
 
 void webpage_handle_root()
 {
-  web_server.sendHeader(F("Cache-Control"), F("no-store"));
-  web_server.send_P(200, "text/html", WEBPAGE_HTML);
+    web_server.sendHeader(F("Cache-Control"), F("no-store"));
+    web_server.send_P(200, "text/html", WEBPAGE_HTML);
 }
 
 //* ---------------------- LIFECYCLE ----------------------
@@ -3320,14 +3320,14 @@ bool webpage_routes_ready = false;
 
 void webpage_start()
 {
-  if (webpage_started)
-    return;
+    if (webpage_started)
+        return;
 
-  if (WiFi.getMode() == WIFI_OFF || WiFi.status() != WL_CONNECTED)
-  {
-    Serial.println("[WEB] No address to serve on - configuration page not started");
-    return;
-  }
+    if (WiFi.getMode() == WIFI_OFF || WiFi.status() != WL_CONNECTED)
+    {
+        Serial.println("[WEB] No address to serve on - configuration page not started");
+        return;
+    }
 
   //* Friendly .local alias. Harmless when the LAN has no mDNS resolver.
   //* setup_OTA() has already run by the time this is reached (net_enter_connected),
@@ -3343,17 +3343,17 @@ void webpage_start()
   //? if ArduinoOTA's own MDNS.begin() ever fails. What must NOT happen is bailing
   //! out of here on a false return, which is what used to leave the HTTP service
   //! unadvertised.
-  if (!MDNS.begin(WEBPAGE_MDNS_HOST))
-    Serial.println("[WEB] mDNS responder already running - reusing its hostname");
-  MDNS.addService("http", "tcp", WEBPAGE_HTTP_PORT);
+    if (!MDNS.begin(WEBPAGE_MDNS_HOST))
+        Serial.println("[WEB] mDNS responder already running - reusing its hostname");
+    MDNS.addService("http", "tcp", WEBPAGE_HTTP_PORT);
 
   //? WiFiManager's provisioning portal has already been torn down here (see
   //? wifi_settings.h), so port 80 is free for the persistent page.
-  web_server.begin();
-  webpage_started = true;
+    web_server.begin();
+    webpage_started = true;
 
-  Serial.printf("[WEB] Device configuration at %s\n", webpage_url().c_str());
-  Serial.printf("[WEB] Also reachable at http://%s.local/\n", WEBPAGE_MDNS_HOST);
+    Serial.printf("[WEB] Device configuration at %s\n", webpage_url().c_str());
+    Serial.printf("[WEB] Also reachable at http://%s.local/\n", WEBPAGE_MDNS_HOST);
 }
 
 //* Take the listener down without touching the route table, so webpage_start()
@@ -3363,93 +3363,93 @@ void webpage_start()
 //* this one. Freeing it here as well would be the second half of a double free.
 void webpage_stop()
 {
-  if (!webpage_started)
-    return;
-  web_server.stop();
-  webpage_started = false;
-  Serial.println("[WEB] Configuration page stopped");
+    if (!webpage_started)
+        return;
+    web_server.stop();
+    webpage_started = false;
+    Serial.println("[WEB] Configuration page stopped");
 }
 
 void setup_webpage()
 {
-  if (webpage_routes_ready)
-  {
+    if (webpage_routes_ready)
+    {
     //? Already built: this is a reconnect, so only the listener comes back.
-    webpage_start();
-    return;
-  }
+        webpage_start();
+        return;
+    }
 
-  webpage_config_load();
+    webpage_config_load();
   //* The login is read once, here, rather than per request: every route asks
   //* whether one is set, and the input panels poll four times a second.
-  webpage_auth_load();
+    webpage_auth_load();
   //* Every route below goes through the gate, which is what makes the login cover
   //? the whole surface - firmware upload included - rather than whichever handlers
   //! someone remembered to guard. See webpage_auth_gate().
-  web_server.on("/", HTTP_GET, webpage_auth_gate(webpage_handle_root));
-  web_server.on("/api/state", HTTP_GET, webpage_auth_gate(webpage_handle_state));
+    web_server.on("/", HTTP_GET, webpage_auth_gate(webpage_handle_root));
+    web_server.on("/api/state", HTTP_GET, webpage_auth_gate(webpage_handle_state));
   //* The input panels poll this one hard, so it is a document of its own
   //* rather than a slower /api/state (see webpage_handle_buttons).
-  web_server.on("/api/buttons", HTTP_GET, webpage_auth_gate(webpage_handle_buttons));
-  web_server.on("/api/modes", HTTP_GET, webpage_auth_gate(webpage_handle_modes));
-  web_server.on("/api/mode", HTTP_POST, webpage_auth_gate(webpage_handle_set_mode));
-  web_server.on("/api/config", HTTP_POST, webpage_auth_gate(webpage_handle_set_config));
+    web_server.on("/api/buttons", HTTP_GET, webpage_auth_gate(webpage_handle_buttons));
+    web_server.on("/api/modes", HTTP_GET, webpage_auth_gate(webpage_handle_modes));
+    web_server.on("/api/mode", HTTP_POST, webpage_auth_gate(webpage_handle_set_mode));
+    web_server.on("/api/config", HTTP_POST, webpage_auth_gate(webpage_handle_set_config));
   //* The login itself, behind the gate like everything else: being able to change
   //? or turn off a login you cannot authenticate against would put the hole back
   //* exactly where it was.
-  web_server.on("/api/auth", HTTP_GET, webpage_auth_gate(webpage_handle_auth_get));
-  web_server.on("/api/auth", HTTP_POST, webpage_auth_gate(webpage_handle_auth_set));
+    web_server.on("/api/auth", HTTP_GET, webpage_auth_gate(webpage_handle_auth_get));
+    web_server.on("/api/auth", HTTP_POST, webpage_auth_gate(webpage_handle_auth_set));
   //* The saved networks. The scan is two routes on one path on purpose: the POST
   //? starts it and the GET reports it, because a scan takes seconds and nothing in
   //* this firmware may spend them inside a request.
-  web_server.on("/api/wifi", HTTP_GET, webpage_auth_gate(webpage_handle_wifi_get));
-  web_server.on("/api/wifi", HTTP_POST, webpage_auth_gate(webpage_handle_wifi_set));
-  web_server.on("/api/wifi/scan", HTTP_POST, webpage_auth_gate(webpage_handle_wifi_scan_start));
-  web_server.on("/api/wifi/scan", HTTP_GET, webpage_auth_gate(webpage_handle_wifi_scan));
+    web_server.on("/api/wifi", HTTP_GET, webpage_auth_gate(webpage_handle_wifi_get));
+    web_server.on("/api/wifi", HTTP_POST, webpage_auth_gate(webpage_handle_wifi_set));
+    web_server.on("/api/wifi/scan", HTTP_POST, webpage_auth_gate(webpage_handle_wifi_scan_start));
+    web_server.on("/api/wifi/scan", HTTP_GET, webpage_auth_gate(webpage_handle_wifi_scan));
   //* Preset slots (services/presets.h). The slot list is what the page draws
   //* its bar from; a single slot carries its values, and is what an export
   //* reads, so the file the browser writes needs no value handling on device.
-  web_server.on("/api/presets", HTTP_GET, webpage_auth_gate(webpage_handle_presets));
-  web_server.on("/api/preset", HTTP_GET, webpage_auth_gate(webpage_handle_preset));
-  web_server.on("/api/preset", HTTP_POST, webpage_auth_gate(webpage_handle_set_preset));
+    web_server.on("/api/presets", HTTP_GET, webpage_auth_gate(webpage_handle_presets));
+    web_server.on("/api/preset", HTTP_GET, webpage_auth_gate(webpage_handle_preset));
+    web_server.on("/api/preset", HTTP_POST, webpage_auth_gate(webpage_handle_set_preset));
   //* Firmware upload (components/ESP32/features/update_firmware_web.h). The
   //* GET is the page's pre-flight - which slot, and how big an image fits -
   //* and the POST pairs the completion handler with the streaming upload
   //* callback, which is the only form the WebServer parses a file body in.
-  web_server.on("/api/update", HTTP_GET, webpage_auth_gate(webpage_handle_update_info));
+    web_server.on("/api/update", HTTP_GET, webpage_auth_gate(webpage_handle_update_info));
   //! The streaming callback is deliberately NOT wrapped: it runs while the request
   //? body is still arriving, and answering 401 from inside it would write to a
   //! socket the client is halfway through sending on. It asks the same question
   //? silently and refuses to write a byte (see webpage_handle_update_upload), so
   //* the 401 the client sees comes from the gated completion handler beside it.
-  web_server.on("/api/update", HTTP_POST, webpage_auth_gate(webpage_handle_update_done),
-                webpage_handle_update_upload);
-  web_server.onNotFound(webpage_auth_gate(webpage_handle_not_found));
+    web_server.on("/api/update", HTTP_POST, webpage_auth_gate(webpage_handle_update_done),
+                  webpage_handle_update_upload);
+    web_server.onNotFound(webpage_auth_gate(webpage_handle_not_found));
 
   //* The route table is complete and must never be built twice: on() appends a
   //! handler, so a second pass would leave two of everything and the first
   //? matching one would answer. Everything after this point is repeatable.
-  webpage_routes_ready = true;
-  webpage_start();
+    webpage_routes_ready = true;
+    webpage_start();
 }
 
 void webpage_loop()
 {
-  if (!webpage_started)
-    return;
+    if (!webpage_started)
+        return;
 
   //* A firmware upload that completed sets a restart deadline here rather than
   //* restarting inside the HTTP handler, so the reply reaches the browser
   //* first. Checked before handleClient() so the reboot is not delayed behind
   //* another request.
-  webpage_update_poll();
+    webpage_update_poll();
 
   //* A network the page saved is joined here rather than in the handler that saved
   //? it, for the same reason the reboot above is deferred: the radio is about to
   //* move, and the reply has to be on the wire before it does.
-  webpage_wifi_poll();
+    webpage_wifi_poll();
 
-  web_server.handleClient();
+    web_server.handleClient();
 }
 
 #endif // SERVICE_WEBPAGE

@@ -12,22 +12,8 @@
 //? js/protocol.js, and the parameter metadata is js/spec.js.
 
 import { ESPLoader, Transport } from '../vendor/esptool-js/bundle.js';
-import {
-  PALETTE_SWATCHES,
-  PAGES,
-  FIELD_SPECS,
-  FIELD_KEYS,
-  boundsFor,
-  fieldsForPage,
-} from './spec.js';
-import {
-  commands,
-  buildSet,
-  buildPresetDoc,
-  parsePresetDoc,
-  sanitizeConfig,
-  parseLine,
-} from './protocol.js';
+import { PALETTE_SWATCHES, PAGES, FIELD_SPECS, FIELD_KEYS, boundsFor, fieldsForPage } from './spec.js';
+import { commands, buildSet, buildPresetDoc, parsePresetDoc, sanitizeConfig, parseLine } from './protocol.js';
 import { SerialLink } from './serial.js';
 
 const $ = (selector) => document.querySelector(selector);
@@ -211,10 +197,25 @@ function loadDemo() {
 
   renderAll();
   handleTick({
-    t: 'tick', v: 1, ms: 7234000, mode: 5,
-    ax: -0.12, ay: 0.03, az: 9.81, gx: 0.1, gy: -0.2, gz: 0.0,
-    imp: 12, ic: 3, ia: 850, lp: 19, rail: 4012, heap: 123456,
-    net: 0, dirty: true, btn: 0,
+    t: 'tick',
+    v: 1,
+    ms: 7234000,
+    mode: 5,
+    ax: -0.12,
+    ay: 0.03,
+    az: 9.81,
+    gx: 0.1,
+    gy: -0.2,
+    gz: 0.0,
+    imp: 12,
+    ic: 3,
+    ia: 850,
+    lp: 19,
+    rail: 4012,
+    heap: 123456,
+    net: 0,
+    dirty: true,
+    btn: 0,
   });
 
   setText('connText', 'Demo');
@@ -242,7 +243,8 @@ function browserProblem() {
       body:
         'Chrome or Edge on a desktop is required. Firefox, Safari and every mobile ' +
         'browser lack the API this page needs, so there is no fallback inside them.',
-      fix: 'Open the page in Chrome 89+ or Edge 89+. Any serial terminal can also send ' +
+      fix:
+        'Open the page in Chrome 89+ or Edge 89+. Any serial terminal can also send ' +
         'the same @-prefixed commands; see docs/usb-control.md.',
     };
   }
@@ -721,7 +723,7 @@ async function handshake() {
   if (Number(pong.proto) !== 1) {
     throw new Error(
       `The firmware speaks protocol ${pong.proto}, this console speaks 1. ` +
-      'Update the console or the board so both match.'
+        'Update the console or the board so both match.',
     );
   }
   app.pong = pong;
@@ -1114,7 +1116,8 @@ function syncField(key) {
 
   const range = input.closest('.field')?.querySelector('.range');
   if (range) {
-    range.textContent = `${formatBound(bounds.min, bounds)}–${formatBound(bounds.max, bounds)}` +
+    range.textContent =
+      `${formatBound(bounds.min, bounds)}–${formatBound(bounds.max, bounds)}` +
       (bounds.unit ? ` ${bounds.unit}` : '');
   }
 
@@ -1152,20 +1155,20 @@ function renderDerived() {
   const leds = Number(state.active_leds) || 0;
   //* Mirror the firmware's worst-case ceiling so the line follows the budget
   //? immediately after the ACK, without waiting for the next full state.
-  const budgetCap = (budget > 0 && leds > 0)
-    ? Math.min(255, Math.floor(budget * 255 / (leds * 60)))
-    : 255;
+  const budgetCap = budget > 0 && leds > 0 ? Math.min(255, Math.floor((budget * 255) / (leds * 60))) : 255;
   const configured = Number(state.brightness) || 0;
   const guardScale = Number(state.guard_scale ?? 255);
   const safeActive = Boolean(state.safe_boot);
   const safePct = Number(state.safe_pct ?? 70);
   const capped = Math.min(configured, budgetCap);
-  const guarded = Math.round(capped * guardScale / 255);
-  const safe = safeActive ? Math.round(guarded * safePct / 100) : guarded;
-  const maxLoad = Math.round(leds * 60 * safe / 255);
-  setText('stripInfo',
+  const guarded = Math.round((capped * guardScale) / 255);
+  const safe = safeActive ? Math.round((guarded * safePct) / 100) : guarded;
+  const maxLoad = Math.round((leds * 60 * safe) / 255);
+  setText(
+    'stripInfo',
     `${state.active_leds} of ${state.num_leds} LEDs lit · brightness ${state.brightness}/255 · ` +
-    `Max load ${maxLoad} of ${budget} mA`);
+      `Max load ${maxLoad} of ${budget} mA`,
+  );
 
   //* One explicit feedback line: no silent caps. The budget is checked first
   //? because it is the persistent limit the user chose; the guard and safe mode
@@ -1191,28 +1194,36 @@ function renderDerived() {
   }
 
   if (state.whip_travel_ms !== undefined) {
-    setText('whipDerived',
+    setText(
+      'whipDerived',
       `One hump crosses the strip in ${state.whip_travel_ms} ms. ` +
-      `${state.whip_in_flight} in flight now, up to ${state.whip_max_heads}.`);
+        `${state.whip_in_flight} in flight now, up to ${state.whip_max_heads}.`,
+    );
   }
 
   if (state.rainbow_travel_ms !== undefined) {
-    setText('rainbowDerived',
+    setText(
+      'rainbowDerived',
       `One colour crosses in ${state.rainbow_travel_ms} ms. ` +
-      `A band is ${state.rainbow_band_min_leds}–${state.rainbow_band_max_leds} LEDs wide ` +
-      `at this speed and wait range.`);
+        `A band is ${state.rainbow_band_min_leds}–${state.rainbow_band_max_leds} LEDs wide ` +
+        `at this speed and wait range.`,
+    );
   }
 
   if (state.flame_power_soft !== undefined) {
-    setText('flameDerived',
+    setText(
+      'flameDerived',
       `At the current scale the softest impact lights the strip at ` +
-      `${state.flame_power_soft}/255 and the hardest at ${state.flame_power_hard}/255.`);
+        `${state.flame_power_soft}/255 and the hardest at ${state.flame_power_hard}/255.`,
+    );
   }
 
   if (state.step_cadence_max_sps !== undefined) {
-    setText('impactDerived',
+    setText(
+      'impactDerived',
       `The detector can sample up to ${state.step_cadence_max_sps}/s. ` +
-      `Reported magnitude is rescaled to ${state.step_magnitude_min}–${state.step_magnitude_max}.`);
+        `Reported magnitude is rescaled to ${state.step_magnitude_min}–${state.step_magnitude_max}.`,
+    );
   }
 }
 
@@ -1324,7 +1335,8 @@ function renderConnectionUI() {
     connectButton.disabled = true;
   }
 
-  $('#btnReconnect').hidden = app.connected || app.connecting || !app.port || app.demo || app.updateBusy || app.recoveryBusy;
+  $('#btnReconnect').hidden =
+    app.connected || app.connecting || !app.port || app.demo || app.updateBusy || app.recoveryBusy;
 
   $('#btnSave').disabled = !ready;
   $('#btnRevert').disabled = !ready;
@@ -1334,8 +1346,10 @@ function renderConnectionUI() {
   $('#streamOn').disabled = !app.connected;
   $('#streamHz').disabled = !app.connected;
 
-  for (const input of $$('#page-shared input[type="number"], #page-flame input[type="number"], ' +
-    '#page-impact input[type="number"], #page-whip input[type="number"], #page-rainbow input[type="number"]')) {
+  for (const input of $$(
+    '#page-shared input[type="number"], #page-flame input[type="number"], ' +
+      '#page-impact input[type="number"], #page-whip input[type="number"], #page-rainbow input[type="number"]',
+  )) {
     input.disabled = !ready;
   }
   $('#colorPicker').disabled = !ready;
@@ -1391,9 +1405,11 @@ async function checkLatestBuild() {
     const size = Number(manifest.size) || 0;
     const when = manifest.built ? new Date(manifest.built) : null;
     const stamp = when && !Number.isNaN(when.getTime()) ? when.toLocaleString() : 'unknown date';
-    setText('updateInfo',
+    setText(
+      'updateInfo',
       `${manifest.version} · ${formatBytes(size)} · ${stamp}` +
-      (manifest.source ? ` · ${manifest.source}` : ''));
+        (manifest.source ? ` · ${manifest.source}` : ''),
+    );
     log(`latest build: ${manifest.version} (${manifest.source || 'source unknown'})`);
     renderUpdatePanel();
   } catch (error) {
@@ -1458,8 +1474,8 @@ async function installLatest() {
     const build = manifest.builds[0];
     // The USB updater writes the app to the inactive app slot; boot_app0 belongs to
     // the ROM-bootloader path and is not sent over this link.
-    const appPart = build.parts.find((part) => Number(part.offset) === 65536) ||
-      build.parts[build.parts.length - 1];
+    const appPart =
+      build.parts.find((part) => Number(part.offset) === 65536) || build.parts[build.parts.length - 1];
     const source = manifest.source || manifest.version || String(Date.now());
     const base = new URL(UPDATE_MANIFEST_URL, window.location.href);
     const url = new URL(appPart.path, base);
@@ -1560,8 +1576,8 @@ async function runRecovery() {
     return;
   }
 
-  const parts = (app.updateManifest.builds?.[0]?.parts) || [];
-  const bootPart = parts.find((part) => Number(part.offset) === 0xE000);
+  const parts = app.updateManifest.builds?.[0]?.parts || [];
+  const bootPart = parts.find((part) => Number(part.offset) === 0xe000);
   const appPart = parts.find((part) => Number(part.offset) === 0x10000);
   if (!bootPart || !appPart) {
     showError('The release has no boot_app0/app pair.');
@@ -1618,8 +1634,12 @@ async function runRecovery() {
       baudrate: 460800,
       terminal: {
         clean() {},
-        writeLine(data) { log(String(data)); },
-        write(data) { log(String(data)); },
+        writeLine(data) {
+          log(String(data));
+        },
+        write(data) {
+          log(String(data));
+        },
       },
     });
 
@@ -1627,7 +1647,7 @@ async function runRecovery() {
     await loader.main();
     await loader.writeFlash({
       fileArray: [
-        { data: boot, address: 0xE000 },
+        { data: boot, address: 0xe000 },
         { data: appImage, address: 0x10000 },
       ],
       flashSize: 'keep',
@@ -1884,7 +1904,8 @@ function renderDiagnostics() {
     ? (() => {
         const info = app.port.getInfo ? app.port.getInfo() : {};
         const vid = info.usbVendorId !== undefined ? info.usbVendorId.toString(16).padStart(4, '0') : '----';
-        const pid = info.usbProductId !== undefined ? info.usbProductId.toString(16).padStart(4, '0') : '----';
+        const pid =
+          info.usbProductId !== undefined ? info.usbProductId.toString(16).padStart(4, '0') : '----';
         return `${vid}:${pid}`;
       })()
     : '—';
@@ -1896,17 +1917,26 @@ function renderDiagnostics() {
   setText('diag-proto', pong ? String(pong.proto) : '1');
   setText('diag-uptime', tick ? formatUptime(tick.ms) : state ? formatUptime(state.uptime_ms) : '—');
   setText('diag-mode', state ? `${state.mode_label || 'Unknown'} (${state.mode})` : '—');
-  setText('diag-loop', tick ? `${tick.lp} Hz`
-    : state && state.loop_rate ? `${state.loop_rate} Hz` : '—');
-  setText('diag-rail', tick ? `${tick.rail} mV`
-    : state && state.rail_mv ? `${state.rail_mv} mV` : '—');
-  setText('diag-heap', tick ? `${Math.round(Number(tick.heap) / 1024)} KB`
-    : state && state.free_heap ? `${Math.round(Number(state.free_heap) / 1024)} KB` : '—');
-  setText('diag-net', state ? `${state.net}${state.portal ? ' (config hotspot)' : ''}${state.offline_mode ? ' (offline mode)' : ''}` : '—');
+  setText('diag-loop', tick ? `${tick.lp} Hz` : state && state.loop_rate ? `${state.loop_rate} Hz` : '—');
+  setText('diag-rail', tick ? `${tick.rail} mV` : state && state.rail_mv ? `${state.rail_mv} mV` : '—');
+  setText(
+    'diag-heap',
+    tick
+      ? `${Math.round(Number(tick.heap) / 1024)} KB`
+      : state && state.free_heap
+        ? `${Math.round(Number(state.free_heap) / 1024)} KB`
+        : '—',
+  );
+  setText(
+    'diag-net',
+    state
+      ? `${state.net}${state.portal ? ' (config hotspot)' : ''}${state.offline_mode ? ' (offline mode)' : ''}`
+      : '—',
+  );
   setText('diag-rssi', state && state.rssi ? `${state.rssi} dBm` : '—');
   setText('diag-ip', state ? state.ip : '—');
   setText('diag-host', state ? state.hostname : '—');
-  setText('diag-ssid', state ? (state.wifi_ssid || 'nothing saved') : '—');
+  setText('diag-ssid', state ? state.wifi_ssid || 'nothing saved' : '—');
   setText('diag-save', state ? (state.dirty ? 'RAM differs from flash' : 'RAM matches flash') : '—');
 }
 
@@ -1948,18 +1978,25 @@ function renderStress() {
     const mcuMa = Number(state.mcu_ma) || 200;
     rows.push(['Result', STRESS_RESULT_NAMES[result] || `code ${result}`]);
     rows.push(['Stopped during', STRESS_PHASE_NAMES[Number(state.stress_phase)] || '—']);
-    rows.push(['Test ceiling', `${state.stress_ceiling_ma ?? '—'} mA${Number(state.stress_ceiling_ma) > 2000 ? ' (lab)' : ''}`]);
+    rows.push([
+      'Test ceiling',
+      `${state.stress_ceiling_ma ?? '—'} mA${Number(state.stress_ceiling_ma) > 2000 ? ' (lab)' : ''}`,
+    ]);
     rows.push(['Step time', `${state.stress_step_ms ?? '—'} ms`]);
-    rows.push(['Rail guard', Number(state.stress_rail_floor_mv) === 0
-      ? 'disabled (lab)'
-      : `${state.stress_rail_floor_mv ?? '—'} mV`]);
+    rows.push([
+      'Rail guard',
+      Number(state.stress_rail_floor_mv) === 0 ? 'disabled (lab)' : `${state.stress_rail_floor_mv ?? '—'} mV`,
+    ]);
     rows.push(['Channels', colorMaskName(state.stress_color)]);
     rows.push(['LEDs', String(state.stress_leds ?? '—')]);
     rows.push(['Brightness at end', `${state.stress_brightness ?? '—'}/255`]);
     rows.push(['Estimated strip current', `${state.stress_est_ma ?? '—'} mA`]);
     rows.push(['Total with MCU reserve', `${(Number(state.stress_est_ma) || 0) + mcuMa} mA`]);
     rows.push(['V_REG at start', `${state.stress_v_start ?? '—'} mV`]);
-    rows.push(['V_REG min (last step)', `${state.stress_v_min ?? '—'} mV (sag ${state.stress_sag_mv ?? '—'} mV)`]);
+    rows.push([
+      'V_REG min (last step)',
+      `${state.stress_v_min ?? '—'} mV (sag ${state.stress_sag_mv ?? '—'} mV)`,
+    ]);
     rows.push(['Probe', `blank ${state.stress_v_off ?? '—'} mV / lit ${state.stress_v_on ?? '—'} mV`]);
     rows.push(['Source resistance', `${state.stress_r_mohm ?? '—'} mΩ`]);
     rows.push(['Ramp duration', `${seconds.toFixed(1)} s`]);
@@ -1972,9 +2009,10 @@ function renderStress() {
   const list = $('#stressResult');
   list.innerHTML = rows.map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`).join('');
 
-  setText('stressState', app.stressRunning
-    ? 'test running'
-    : (state && state.safe_boot ? `safe mode ${state.safe_pct}%` : ''));
+  setText(
+    'stressState',
+    app.stressRunning ? 'test running' : state && state.safe_boot ? `safe mode ${state.safe_pct}%` : '',
+  );
 
   let hint = 'Connect to the board with the radio off to run a test.';
   if (app.demo) {
@@ -2002,9 +2040,8 @@ async function runStressTest() {
     return;
   }
 
-  const mask = ($('#stressR')?.checked ? 1 : 0) |
-    ($('#stressG')?.checked ? 2 : 0) |
-    ($('#stressB')?.checked ? 4 : 0);
+  const mask =
+    ($('#stressR')?.checked ? 1 : 0) | ($('#stressG')?.checked ? 2 : 0) | ($('#stressB')?.checked ? 4 : 0);
   if (!mask) {
     showError('Select at least one channel (R, G or B).');
     return;
@@ -2023,21 +2060,29 @@ async function runStressTest() {
 
   const ok = confirm(
     `Run ${channels} at ${ceiling} mA, ${step} ms steps?\n\n` +
-    (lab ? 'LAB ONLY: above the 2 A continuous benchmark. This can force a brown-out.\n\n' : '') +
-    (noRail ? 'LAB ONLY: the 3.0 V rail guard is DISABLED. The strip rail may collapse far below 3 V.\n\n' : '') +
-    'The strip blanks for 5 seconds, then ramps. Unplug USB during the blank to test ' +
-    'the battery, then reconnect to read the result.'
+      (lab ? 'LAB ONLY: above the 2 A continuous benchmark. This can force a brown-out.\n\n' : '') +
+      (noRail
+        ? 'LAB ONLY: the 3.0 V rail guard is DISABLED. The strip rail may collapse far below 3 V.\n\n'
+        : '') +
+      'The strip blanks for 5 seconds, then ramps. Unplug USB during the blank to test ' +
+      'the battery, then reconnect to read the result.',
   );
   if (!ok) return;
 
   try {
-    await request(commands.stress(mask, ceiling, step, railFloor),
-      (frame) => frame.t === 'ack' && frame.cmd === 'stress', 2500);
+    await request(
+      commands.stress(mask, ceiling, step, railFloor),
+      (frame) => frame.t === 'ack' && frame.cmd === 'stress',
+      2500,
+    );
     app.stressRunning = true;
     renderStress();
-    setText('stressHint', `Started: ${channels}, ${ceiling} mA, ${step} ms, ` +
-      `${noRail ? 'no rail guard' : '3.0 V rail guard'}. Unplug USB now if you are testing the ` +
-      'battery; reconnect afterwards to read the result.');
+    setText(
+      'stressHint',
+      `Started: ${channels}, ${ceiling} mA, ${step} ms, ` +
+        `${noRail ? 'no rail guard' : '3.0 V rail guard'}. Unplug USB now if you are testing the ` +
+        'battery; reconnect afterwards to read the result.',
+    );
   } catch (error) {
     showError(`Could not start the stress test: ${error.message}`);
   }
@@ -2103,15 +2148,14 @@ async function runSense() {
 
   const ok = confirm(
     `Sense ${count} white LEDs at full brightness, ${burst} ms burst?\n\n` +
-    (lab ? `LAB ONLY: ${ma} mA for 2 s is at/above the PMOS 3.6 A continuous rating.\n\n` : '') +
-    'The strip blanks for 5 s: unplug USB there to test the battery. ' +
-    'Reconnect afterwards to read the V drop and source resistance.'
+      (lab ? `LAB ONLY: ${ma} mA for 2 s is at/above the PMOS 3.6 A continuous rating.\n\n` : '') +
+      'The strip blanks for 5 s: unplug USB there to test the battery. ' +
+      'Reconnect afterwards to read the V drop and source resistance.',
   );
   if (!ok) return;
 
   try {
-    await request(commands.sense(count, burst),
-      (frame) => frame.t === 'ack' && frame.cmd === 'sense', 2500);
+    await request(commands.sense(count, burst), (frame) => frame.t === 'ack' && frame.cmd === 'sense', 2500);
     app.senseRunning = true;
     renderSense();
     setText('senseState', 'sense running');
@@ -2121,7 +2165,18 @@ async function runSense() {
 }
 
 function clearLive() {
-  for (const id of ['lv-mode', 'lv-accel', 'lv-gyro', 'lv-impact', 'lv-loop', 'lv-rail', 'lv-heap', 'lv-net', 'lv-buttons', 'liveRate']) {
+  for (const id of [
+    'lv-mode',
+    'lv-accel',
+    'lv-gyro',
+    'lv-impact',
+    'lv-loop',
+    'lv-rail',
+    'lv-heap',
+    'lv-net',
+    'lv-buttons',
+    'liveRate',
+  ]) {
     setText(id, '—');
   }
   if (app.state) setText('lv-mode', `${app.state.mode_label || '—'} (${app.state.mode})`);
@@ -2252,7 +2307,7 @@ async function previewImpact() {
     const ack = await request(
       commands.impact(magnitude),
       (frame) => frame.t === 'ack' && frame.cmd === 'impact',
-      1800
+      1800,
     );
     setText('impactNote', `sent ${ack.mag} · mode ${ack.mode}`);
     if (ack.mode !== 2) {
@@ -2271,7 +2326,7 @@ async function applyRadio() {
     await request(
       commands.radio(wanted ? 'on' : 'off'),
       (frame) => frame.t === 'ack' && frame.cmd === 'radio',
-      4000
+      4000,
     );
   } catch (error) {
     showError(`Could not switch the radio: ${error.message}`);
@@ -2289,9 +2344,8 @@ async function applyPreset(slot) {
   try {
     await request(
       commands.presetApply(slot),
-      (frame) => frame.t === 'state' ||
-        (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
-      3000
+      (frame) => frame.t === 'state' || (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
+      3000,
     );
     app.touched = false;
     renderState();
@@ -2312,9 +2366,8 @@ async function savePreset(slot, existing) {
   try {
     await request(
       commands.presetSave(slot, name),
-      (frame) => frame.t === 'presets' ||
-        (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
-      2500
+      (frame) => frame.t === 'presets' || (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
+      2500,
     );
     setText('presetInfo', `Saved slot ${slot + 1}${name ? ` as “${name}”` : ''}.`);
     log(`preset ${slot + 1} saved${name ? ` as ${name}` : ''}`);
@@ -2330,9 +2383,8 @@ async function clearPreset(slot) {
   try {
     await request(
       commands.presetClear(slot),
-      (frame) => frame.t === 'presets' ||
-        (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
-      2000
+      (frame) => frame.t === 'presets' || (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
+      2000,
     );
     setText('presetInfo', `Cleared slot ${slot + 1}.`);
   } catch (error) {
@@ -2357,7 +2409,7 @@ async function exportPresets() {
       const frame = await request(
         commands.presetGet(preset.slot),
         (reply) => reply.t === 'preset' && Number(reply.preset?.slot) === Number(preset.slot),
-        2000
+        2000,
       );
       docs.push(frame.preset);
     }
@@ -2410,14 +2462,14 @@ async function importPresets(file) {
       await request(
         buildSet(config, seq),
         (frame) => frame.t === 'ack' && frame.cmd === 'set' && Number(frame.seq) === seq,
-        3000
+        3000,
       );
 
       await request(
         commands.presetSave(slot, preset.name || ''),
-        (frame) => frame.t === 'presets' ||
-          (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
-        2500
+        (frame) =>
+          frame.t === 'presets' || (frame.t === 'ack' && frame.cmd === 'preset' && frame.ok === false),
+        2500,
       );
 
       done++;
@@ -2426,8 +2478,7 @@ async function importPresets(file) {
     // The web page leaves the board on the last imported configuration and
     // saves it; do the same so the two import paths agree.
     await commit();
-    setText('presetInfo', `Imported ${done} preset(s)` +
-      (skipped ? `, skipped ${skipped}` : '') + '.');
+    setText('presetInfo', `Imported ${done} preset(s)` + (skipped ? `, skipped ${skipped}` : '') + '.');
   } catch (error) {
     setText('presetInfo', `Import stopped after ${done}: ${error.message}`);
   } finally {
@@ -2557,9 +2608,13 @@ function setStatus(kind, text) {
   else if (kind === 'error') dot.classList.add('err');
 
   $('#connText').textContent =
-    kind === 'connected' ? 'Connected' :
-    kind === 'connecting' ? 'Connecting…' :
-    kind === 'error' ? 'Error' : 'Not connected';
+    kind === 'connected'
+      ? 'Connected'
+      : kind === 'connecting'
+        ? 'Connecting…'
+        : kind === 'error'
+          ? 'Error'
+          : 'Not connected';
 
   setText('statusLeft', text || kind);
 }
@@ -2590,7 +2645,10 @@ function formatBound(value, bounds) {
 }
 
 function rgbToHex(red, green, blue) {
-  const channel = (value) => Math.max(0, Math.min(255, Number(value) || 0)).toString(16).padStart(2, '0');
+  const channel = (value) =>
+    Math.max(0, Math.min(255, Number(value) || 0))
+      .toString(16)
+      .padStart(2, '0');
   return `#${channel(red)}${channel(green)}${channel(blue)}`;
 }
 
@@ -2620,8 +2678,10 @@ function formatUptime(milliseconds) {
 function timestampForFile() {
   const now = new Date();
   const pad = (value) => String(value).padStart(2, '0');
-  return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-` +
-    `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  return (
+    `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-` +
+    `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`
+  );
 }
 
 function loadSetting(key, fallback) {

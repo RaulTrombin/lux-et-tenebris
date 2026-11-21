@@ -108,7 +108,9 @@ export const commands = {
   updateEnd: () => buildCommand('UPDATE', 'END'),
   updateAbort: () => buildCommand('UPDATE', 'ABORT'),
   presetSave: (slot, name) => {
-    const clean = String(name ?? '').replace(/[\r\n]/g, ' ').trim();
+    const clean = String(name ?? '')
+      .replace(/[\r\n]/g, ' ')
+      .trim();
     return buildCommand('PRESET', 'SAVE', slot, clean ? `name=${clean}` : '');
   },
 };

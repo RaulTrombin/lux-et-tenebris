@@ -582,7 +582,6 @@ void wifi_report_scan()
     }
 }
 
-
 //* ---------------------- EVENT LOG ----------------------
 #if WIFI_DIAGNOSTICS
 //* The disconnect reasons that actually occur here, in words.

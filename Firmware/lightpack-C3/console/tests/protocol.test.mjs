@@ -62,10 +62,7 @@ test('formatNumber keeps values in the form usb_is_number() accepts', () => {
 });
 
 test('buildSet builds one ordered batch and rejects unknown fields', () => {
-  assert.equal(
-    buildSet({ brightness: 128, mode: 5 }, 7),
-    '@SET brightness=128&mode=5&seq=7\n'
-  );
+  assert.equal(buildSet({ brightness: 128, mode: 5 }, 7), '@SET brightness=128&mode=5&seq=7\n');
   assert.equal(buildSet({ flame_decay: 0.9 }), '@SET flame_decay=0.9\n');
   assert.throws(() => buildSet({ widht: 1 }), /unknown config field/);
   assert.throws(() => buildSet({ brightness: Number.NaN }), /bad value/);
@@ -152,8 +149,14 @@ test('parseLine separates frames, logs and malformed frames', () => {
 
 test('configFromState picks the 39 preset fields and ignores derived values', () => {
   const state = {
-    mode: 5, red: 1, green: 2, blue: 3, brightness: 4,
-    whip_travel_ms: 999, mode_key: 'whip', active_leds: 60,
+    mode: 5,
+    red: 1,
+    green: 2,
+    blue: 3,
+    brightness: 4,
+    whip_travel_ms: 999,
+    mode_key: 'whip',
+    active_leds: 60,
   };
   const config = configFromState(state);
   assert.deepEqual(Object.keys(config).sort(), ['blue', 'brightness', 'green', 'mode', 'red']);
@@ -192,7 +195,11 @@ test('bounds come from the live state, not from a second hard-coded copy', () =>
   };
 
   assert.deepEqual(boundsFor('leds', state), {
-    min: 1, max: 250, step: 1, decimals: 0, unit: '',
+    min: 1,
+    max: 250,
+    step: 1,
+    decimals: 0,
+    unit: '',
   });
   assert.equal(boundsFor('whip_length', state).max, 60);
   assert.equal(boundsFor('whip_length', state).min, 2);

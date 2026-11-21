@@ -224,9 +224,17 @@ export const FIELD_SPECS = {
 export const FIELD_KEYS = Object.keys(FIELD_SPECS);
 
 export const PAGES = [
-  { id: 'shared', label: 'Shared', hint: 'Palette, brightness, power budget and the number of LEDs every mode draws on.' },
+  {
+    id: 'shared',
+    label: 'Shared',
+    hint: 'Palette, brightness, power budget and the number of LEDs every mode draws on.',
+  },
   { id: 'flame', label: 'Step flame', hint: 'How an impact is drawn, and how long it takes to fade.' },
-  { id: 'impact', label: 'Impact detector', hint: 'What counts as an impact. This is shared by every mode that reacts to movement.' },
+  {
+    id: 'impact',
+    label: 'Impact detector',
+    hint: 'What counts as an impact. This is shared by every mode that reacts to movement.',
+  },
   { id: 'whip', label: 'Pulse whip', hint: 'A hump of light travelling from the start of the strip.' },
   { id: 'rainbow', label: 'Rainbow flow', hint: 'Random colours drifting toward the far end.' },
   { id: 'fade', label: 'Gyro fade', hint: 'How the gyro peaks decay into the lit length and colour.' },
